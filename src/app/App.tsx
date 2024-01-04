@@ -7,7 +7,7 @@ import FindOb from "features/findOB/findOB";
 const App = () => {
   // console.log('Компонент App перерисован')
 
-  const [candlesNumber, setCandlesNumber] = useState(5)
+  const [candlesNumber, setCandlesNumber] = useState(2)
 
 
 

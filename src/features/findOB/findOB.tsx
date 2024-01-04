@@ -30,22 +30,21 @@ const FindOb = ({candlesNumber}: Props) => {
     return false;
   });
 
-  const findOrderBlockIndexes = findOrderBlocks.map((findOrderBlock) => candles.indexOf(findOrderBlock));
+  const orderBlocksIndexes = findOrderBlocks.map((findOrderBlock) => candles.indexOf(findOrderBlock));
 
 
   const showOrderBlocks = findOrderBlocks.map((candle) => (
-    <ul>
-      <li key={candle.openTime}>{formattedDate(candle.openTime)} - {(candle.high)}</li>
+    <ul key={candle.openTime}>
+      <li>{formattedDate(candle.openTime)} - {(candle.high)}</li>
     </ul>
   ));
 
   return (
     <div style={{display: "flex"}}>
-
       <ul>
         {showOrderBlocks}
       </ul>
-      <OpenTrade orderBlocks={findOrderBlocks} candlesNumber={candlesNumber}/>
+      <OpenTrade orderBlocksIndexes={orderBlocksIndexes} candlesNumber={candlesNumber}/>
     </div>
   );
 };

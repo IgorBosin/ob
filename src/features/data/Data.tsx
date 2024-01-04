@@ -24,7 +24,7 @@ const Data: FC = () => {
   async function fetchFirstData() {
     dispatch(clearDataAC());
     try {
-      const responseData: dataType[] = await getKline("BTCUSDT", timeFrame, initialTime as number);
+      const responseData: dataType[] = await getKline("DOTUSDT", timeFrame, initialTime as number);
       dispatch(fetchDataAC(responseData));
       dispatch(setDisabledButtonAC(true))
     } catch (e) {
