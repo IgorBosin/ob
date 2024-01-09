@@ -10,21 +10,22 @@ import {Button} from "@mui/material";
 import axios from "axios";
 import {importantDates} from "../../shared/Date/generalDates";
 import {formattedDate} from "shared/Date/formattedDate";
+import Input from "shared/Input/Input";
 
 
 const Data: FC = () => {
   const dispatch = useDispatch()
-  const [initialTime, setInitialTime] = useState<number | null>(importantDates.novemb20year2023);
+  const [initialTime, setInitialTime] = useState<number | null>(importantDates.september27year23);
   const data = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
 
   const options: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
   const [timeFrame, setTimeFrame] = useState<TimeFrameType>('4h');
-
+  const [symbols, setSymbols] = useState('BTC')
 
   async function fetchFirstData() {
     dispatch(clearDataAC());
     try {
-      const responseData: dataType[] = await getKline("DOTUSDT", timeFrame, initialTime as number);
+      const responseData: dataType[] = await getKline(`${symbols}USDT`, timeFrame, initialTime as number);
       dispatch(fetchDataAC(responseData));
       dispatch(setDisabledButtonAC(true))
     } catch (e) {
@@ -61,6 +62,7 @@ const Data: FC = () => {
         }
       }
     }
+
     fetchData(); // Вызываем асинхронную функцию сразу
     if (hasError) {
       return;
@@ -76,6 +78,11 @@ const Data: FC = () => {
     <div style={{display: 'flex', alignItems: 'center'}}>
       <DateComponent time={initialTime} setTime={setInitialTime}/>
       <Dropdown title={'TimeFrame'} options={options} selectedOption={timeFrame} setSelectedOption={setTimeFrame}/>
+      <Input margin={"none"} type={"text"} label={'монета'}
+             onChange={(e) => {
+               setSymbols(e.currentTarget.value)
+             }}
+             placeholder={symbols}/>
       <Button onClick={fetchFirstData} color="success" variant="outlined">Загрузить график</Button>
       {showTime}
     </div>

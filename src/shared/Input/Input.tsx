@@ -6,17 +6,26 @@ type Props = {
   step?: number
   bold?: string
   suffix?: string
-  min?:number
-  max?:number
+  min?: number
+  max?: number
+  // margin?: string,
+  marginLeft?: string
+  marginRight?: string
+  marginBottom?: string
+  marginTop?: string
 }
 
-const Input: FC<TextFieldProps & Props> = forwardRef(function Input(props,ref) {
+const Input: FC<TextFieldProps & Props> = forwardRef(function Input(props, ref) {
 
   const primaryTextColor = 'black'
   const secondaryTextColor = '#999'
 
   const styles = {
-    marginBottom: '16px',
+    // margin: props.margin,
+    marginLeft: props.marginLeft,
+    marginRight: props.marginRight,
+    marginBottom: props.marginBottom,
+    marginTop: props.marginTop,
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
         borderColor: secondaryTextColor, // Цвет рамки в неактивном состоянии
@@ -67,7 +76,8 @@ const Input: FC<TextFieldProps & Props> = forwardRef(function Input(props,ref) {
           step: props.step,
         },
         style: {fontWeight: props.bold},
-        startAdornment: <InputAdornment style={{position:'absolute', left:'55px'}} position="start">{props.suffix}</InputAdornment>,
+        startAdornment: <InputAdornment style={{position: 'absolute', left: '55px'}}
+                                        position="start">{props.suffix}</InputAdornment>,
       }}
 
       {...props}

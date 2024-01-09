@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "app/store";
 import {dataType} from "shared/api/getKlines";
+import Input from "shared/Input/Input";
 
 type Props = {
   enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
@@ -10,7 +11,7 @@ type Props = {
 
 const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
-  const [ratio, setRatio] = useState(4) // выбор небоходимого соотношения риск\прибыль
+  const [ratio, setRatio] = useState(3) // выбор небоходимого соотношения риск\прибыль
   const [winnings, setWinnings] = useState('')
   const [losing, setLosing] = useState('')
 
@@ -30,6 +31,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
     // проверяем enteringCandleIndexes пробила ли она вниз до лоя orderBlocks.
     for (const enterCandle of enteringCandleIndexes) {
       const lengthCandle = (candles[enterCandle.orderBlock].high - candles[enterCandle.orderBlock].low) * ratio
+
       if (candles[enterCandle.orderBlock].open > candles[enterCandle.orderBlock].close) { // ОБ зеленый(свеча красная)
         for (let i = enterCandle.entering; i < candles.length; i++) {
           if (candles[i].low < candles[enterCandle.orderBlock].low) {
@@ -37,6 +39,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
             break
           }
           if (candles[i].high > lengthCandle + candles[enterCandle.orderBlock].high) {
+            console.log(candles[enterCandle.orderBlock].high, candles[enterCandle.entering].high)
             obj.win++
             break
           }
@@ -48,7 +51,8 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
             obj.lose++
             break
           }
-          if (candles[i].high < candles[enterCandle.orderBlock].low - lengthCandle) {
+          if (candles[i].low < candles[enterCandle.orderBlock].low - lengthCandle) {
+            console.log(candles[enterCandle.orderBlock].high, candles[enterCandle.entering].high)
             obj.win++
             break
           }
@@ -60,14 +64,19 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 
   const res = closingLongTrade(candles, enteringCandleIndexes)
 
+  const earn = (res.win * ratio - res.lose) * 10
+
+  const resInfo = res.win / (res.win + res.lose) * 100
+
+  console.log('перерисован компонент CloseTrade')
+
   return (
     <div>
-      <ul>WIN -- {res.win * ratio}</ul>
+      <Input label={'RR'} placeholder={ratio.toString()} onChange={(e)=>setRatio(+e.currentTarget.value)}/>
+      <ul>WIN -- {res.win}. С учетом соотношения - {res.win * ratio} </ul>
       <ul>LOSE -- {res.lose}  </ul>
-
-
-      {/*{enteringCandleIndexes.map(el =>*/}
-      {/*  <li>ОБ-{el.orderBlock} : {el.entering}-ВХОД </li>)}*/}
+      <ul>сколько заработал рискуя 10$ на сделку - {earn}</ul>
+      <ul>какой % прибыльных сделок - {resInfo}</ul>
     </div>
   );
 };
