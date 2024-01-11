@@ -12,7 +12,7 @@ type Props = {
 
 const FindOb = ({candlesNumber}: Props) => {
   const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
-  const [dopParametr, setDopParametr] = useState(true)
+  const [dopParametr, setDopParametr] = useState(false)
   const [param, setParam] = useState(3)
 
   const findGreenCandlesFollowedByRed = () => {
