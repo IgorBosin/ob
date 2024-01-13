@@ -3,6 +3,8 @@ import {useSelector} from "react-redux";
 import {AppRootStateType} from "app/store";
 import {dataType} from "shared/api/getKlines";
 import Input from "shared/Input/Input";
+import {formattedDate} from "shared/Date/formattedDate";
+import {isGreenCandle, isRedCandle} from "utils/actions";
 
 type Props = {
   enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
@@ -11,63 +13,70 @@ type Props = {
 
 const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
-  const [ratio, setRatio] = useState(3) // выбор небоходимого соотношения риск\прибыль
-  const [winnings, setWinnings] = useState('')
-  const [losing, setLosing] = useState('')
-  const [onlyRed, setOnlyRed] = useState(true)
-  const [onlyGren, setOnlyGren] = useState(true)
-
-  const isValidExit = (candleOb: dataType, candleIter: dataType) => {
-    if (candleOb.open > candleOb.close) { //green
-      return candleOb.high > candleIter.low;
-    } else {
-      return candleOb.low < candleIter.high;
-    }
-  }
+  const [ratio, setRatio] = useState(2) // выбор небоходимого соотношения риск\прибыль
+  const [isShowOnlyRed, setIsShowOnlyRed] = useState(true)
+  const [isShowOnlyGreen, setIsShowOnlyGreen] = useState(true)
 
   const closingLongTrade = (candles: dataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
     let obj = {
       win: 0,
       lose: 0,
-      tradesInRow: 0
+      tradesInRow: {
+        date: [] as number[],
+        point: [] as number[]
+      }
     }
     // проверяем enteringCandleIndexes пробила ли она вниз до лоя orderBlocks.
     for (const enterCandle of enteringCandleIndexes) {
       const lengthCandle = (candles[enterCandle.orderBlock].high - candles[enterCandle.orderBlock].low) * ratio
+      const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].high
+      const profitForBearishOB = candles[enterCandle.orderBlock].low - lengthCandle
 
-      if (onlyGren) {
-        if (candles[enterCandle.orderBlock].open > candles[enterCandle.orderBlock].close) { // ОБ зеленый(свеча красная)
+      if (isShowOnlyGreen) {
+        // бычий ОБ (свеча красная)
+        if (isRedCandle(candles[enterCandle.orderBlock])) {
           for (let i = enterCandle.entering; i < candles.length; i++) {
             if (candles[i].low < candles[enterCandle.orderBlock].low) {
-
               obj.lose++
+              obj.tradesInRow.point.push(0)
               break
             }
-            if (candles[i].high > lengthCandle + candles[enterCandle.orderBlock].high) {
-              console.log(candles[enterCandle.orderBlock].high, candles[enterCandle.entering].high)
+            if (candles[i].high > profitForBullishOB) {
+              // индекс ентеринг свечи равен индексу текущей свечи и эта свеча не закрылась выше ТП, то continue
+              if (i === enterCandle.entering && candles[i].close < profitForBullishOB) {
+                continue
+              }
+              obj.tradesInRow.point.push(1)
               obj.win++
+              obj.tradesInRow.date.push(candles[enterCandle.orderBlock].openTime)
               break
             }
           }
         }
       }
 
-      if (onlyRed) {
-        if (candles[enterCandle.orderBlock].open < candles[enterCandle.orderBlock].close) { /// ОБ красный(свеча зеленая)
+      if (isShowOnlyRed) {
+        // медвежий ОБ (свеча зеленая)
+        if (isGreenCandle(candles[enterCandle.orderBlock])) {
           for (let i = enterCandle.entering; i < candles.length; i++) {
             if (candles[i].high > candles[enterCandle.orderBlock].high) {
               obj.lose++
+              obj.tradesInRow.point.push(0)
               break
             }
-            if (candles[i].low < candles[enterCandle.orderBlock].low - lengthCandle) {
-              console.log(candles[enterCandle.orderBlock].high, candles[enterCandle.entering].high)
+            if (candles[i].low < profitForBearishOB) {
+              // индекс ентеринг свечи равен индексу текущей свечи и эта свеча не закрылась выше ТП, то continue
+              if (i === enterCandle.entering && candles[i].close < profitForBearishOB) {
+                continue
+              }
+              obj.tradesInRow.point.push(1)
               obj.win++
+              obj.tradesInRow.date.push(candles[enterCandle.orderBlock].openTime)
               break
             }
           }
         }
       }
-
     }
     return obj
   }
@@ -78,12 +87,49 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 
   const resInfo = res.win / (res.win + res.lose) * 100
 
-  console.log('перерисован компонент CloseTrade')
+  // const arrEarn = res.tradesInRow.date.sort((a, b) => a - b).map(el => <li>{formattedDate(el)}</li>)
+  const arrEarn = res.tradesInRow.date.map(el => <li>{formattedDate(el)}</li>)
 
+
+  function findMostFrequentNumber(arr: number[]) {
+    let currentNumber = arr[0];
+    let currentCount = 1;
+
+    let maxNumber = arr[0];
+    let maxCount = 1;
+
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] === currentNumber) {
+        currentCount++;
+      } else {
+        if (currentCount > maxCount) {
+          maxNumber = currentNumber;
+          maxCount = currentCount;
+        }
+
+        currentNumber = arr[i];
+        currentCount = 1;
+      }
+    }
+
+    if (currentCount > maxCount) {
+      maxNumber = currentNumber;
+      maxCount = currentCount;
+    }
+
+    console.log(`Число ${maxNumber} повторяется чаще всего, а именно ${maxCount} раз(а).`);
+    return maxCount
+  }
+
+  const expectancy = (resInfo*ratio/100)-(1-resInfo/100)
+
+  const numberOfLostTradesInRow = findMostFrequentNumber(res.tradesInRow.point)
+
+  console.log('перерисован компонент CloseTrade')
   return (
     <div>
-      <input type="checkbox" checked={onlyRed} onChange={() => setOnlyRed(!onlyRed)}/> - Red OB
-      <input type="checkbox" checked={onlyGren} onChange={() => setOnlyGren(!onlyGren)}/> - Green OB
+      <input type="checkbox" checked={isShowOnlyRed} onChange={() => setIsShowOnlyRed(!isShowOnlyRed)}/> - Red OB
+      <input type="checkbox" checked={isShowOnlyGreen} onChange={() => setIsShowOnlyGreen(!isShowOnlyGreen)}/> - Green OB
       <div>
         <Input label={'RR'} placeholder={ratio.toString()} onChange={(e) => setRatio(+e.currentTarget.value)}/>
         <ul>всего сделок - {res.win + res.lose}</ul>
@@ -91,6 +137,9 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
         <ul>LOSE -- {res.lose}  </ul>
         <ul>сколько заработал единиц риска - {earn}</ul>
         <ul>какой % прибыльных сделок - {resInfo}</ul>
+        <ul>максимально возможное количество проигранных сделок подряд - {numberOfLostTradesInRow}</ul>
+        <ul>насколько стратегия выигрышная - {expectancy.toFixed(3)} </ul>
+        <ul>ОБ где на свече входа получился ТП: {arrEarn}</ul>
       </div>
     </div>
 

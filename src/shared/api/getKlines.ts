@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function getKline(pair: string, interval: string, startTime: number, limit = 1000) {
-  const url = `https://api.binance.com/api/v3/klines?symbol=${pair}&interval=${interval}&limit=${limit}&startTime=${startTime}`;
+  const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${pair}&interval=${interval}&limit=${limit}&startTime=${startTime}`;
   const data = await axios.get<BaseResponseType[]>(url);
 
   const transformedData: dataType[] = data.data.map((series) => ({

@@ -103,10 +103,9 @@ const FindOb = ({candlesNumber}: Props) => {
       <Input placeholder={param.toString()} label={'Параметр'} onChange={(e)=>setParam(+e.currentTarget.value)}/>
       <input type="checkbox" checked={dopParametr} onChange={() => setDopParametr(!dopParametr)}/>
       <div style={{display: "flex"}}>
-        <ul>
-          {showOrderBlocks}
-        </ul>
-        <div>{orderBlocksIndexes.length}</div>
+        {/*<ul>*/}
+        {/*  {showOrderBlocks}*/}
+        {/*</ul>*/}
         <OpenTrade orderBlocksIndexes={orderBlocksIndexes} candlesNumber={candlesNumber}/>
       </div>
     </div>

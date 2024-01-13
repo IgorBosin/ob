@@ -44,7 +44,7 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
   }
 
 
-  const enteringCandleIndexes = enteringTrade(candles, orderBlocksIndexes, candlesNumber)
+  const enteringCandleIndexes = enteringTrade(candles, orderBlocksIndexes, candlesNumber).sort((a,b)=>a.entering-b.entering)
 
   const enteringTrade_ = (candles: dataType[], orderBlocks: dataType[], candlesNumber: number) => {
     const enteringLongTrades = []
@@ -76,9 +76,9 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
 
   return (
     <div style={{display: "flex"}}>
-      <div>
-        {enteringCandleIndexes.map(el => <li key={el.entering}>{el.entering} - {el.orderBlock}</li>)}
-      </div>
+      {/*<div>*/}
+      {/*  {enteringCandleIndexes.map(el => <li key={el.entering}>{candles[el.entering].high} - {candles[ el.orderBlock].high}</li>)}*/}
+      {/*</div>*/}
       <ClosingTrade enteringCandleIndexes={enteringCandleIndexes} orderBlocksIndexes={orderBlocksIndexes}/>
     </div>
   );
