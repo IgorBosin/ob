@@ -133,12 +133,12 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
       <div>
         <Input label={'RR'} placeholder={ratio.toString()} onChange={(e) => setRatio(+e.currentTarget.value)}/>
         <ul>всего сделок - {res.win + res.lose}</ul>
-        <ul>WIN -- {res.win}. С учетом соотношения - {res.win * ratio} </ul>
-        <ul>LOSE -- {res.lose}  </ul>
-        <ul>сколько заработал единиц риска - {earn}</ul>
-        <ul>какой % прибыльных сделок - {resInfo}</ul>
-        <ul>максимально возможное количество проигранных сделок подряд - {numberOfLostTradesInRow}</ul>
-        <ul>насколько стратегия выигрышная - {expectancy.toFixed(3)} </ul>
+        <ul>WIN - {res.win}. С учетом соотношения: {res.win * ratio} </ul>
+        <ul>LOSE - {res.lose}  </ul>
+        <ul>сколько заработал единиц риска: {earn}</ul>
+        <ul>какой % прибыльных сделок: {resInfo}</ul>
+        <ul>максимально возможное количество проигранных сделок подряд: {numberOfLostTradesInRow}</ul>
+        <ul>насколько стратегия выигрышная: {expectancy.toFixed(3)} </ul>
         <ul>ОБ где на свече входа получился ТП: {arrEarn}</ul>
       </div>
     </div>
