@@ -3,8 +3,8 @@ import './App.css';
 import {ErrorSnackbar} from "shared/ErrorSnackbar/ErrorSnackbar";
 import Data from "features/data/Data";
 import Input from "shared/Input/Input";
-import FindBearishOB from "features/findOB/findBearishOB";
-import FindBullishOB from "features/findOB/findBullishOB";
+import FindBearishOB from "features/OrderBlocks/ui/BearishOB/findBearishOB";
+import FindBullishOB from "features/OrderBlocks/ui/BullishOB/findBullishOB";
 
 const App = () => {
   // console.log('Компонент App перерисован')

@@ -1,13 +1,17 @@
 import {combineReducers, legacy_createStore} from 'redux'
 import {appReducer} from "app/appReducer";
 import {dataReducer} from "features/data/dataReducer";
+import {configureStore} from "@reduxjs/toolkit";
 
 // объединяя reducer-ы с помощью combineReducers,
 // мы задаём структуру нашего единственного объекта-состояния
 const rootReducer = combineReducers({
-    app: appReducer,
-    data: dataReducer
+  app: appReducer,
+  data: dataReducer
 })
+
+
+
 // непосредственно создаём store
 export const store = legacy_createStore(rootReducer)
 // определить автоматически тип всего объекта состояния

@@ -2,9 +2,9 @@ import React from 'react';
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "app/store";
 import {dataType} from "shared/api/getKlines";
-import {formattedDate} from "shared/Date/formattedDate";
 import {isRedCandle} from "utils/actions";
-import SummaryOB from "features/findOB/summaryOB";
+import FilterBullishOB from "features/OrderBlocks/ui/BullishOB/filterBullishOB";
+import ShowCandles from "shared/ShowCandles/ShowCandles";
 
 type Props = {
   candlesNumber: number
@@ -42,47 +42,13 @@ const FindBullishOB = ({candlesNumber, outsideOrderBlockCandleIndex}: Props) => 
     return result;
   };
 
-  const sortOBBySomeNextCandleOutsideOB = (data: dataType[], orderBlockList: dataType[], outsideOrderBlockCandleIndex: number) => {
-    if (!outsideOrderBlockCandleIndex) return orderBlockList
-    const sortOB = []
-    for (const orderBlock of orderBlockList) {
-      const indexNextCandle = data.indexOf(orderBlock) + outsideOrderBlockCandleIndex
-      if (data[indexNextCandle].close > orderBlock.high) {
-        sortOB.push(orderBlock)
-      }
-    }
-    return sortOB
-  }
-
-  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(candles, findBullishOB(), outsideOrderBlockCandleIndex)
-
-  const bearishObIndexes = findBullishOB().map((findOrderBlock) => candles.indexOf(findOrderBlock));
-
-  const showCandles = (candles: dataType[]) => candles.map((candle) => (
-      <ul key={candle.openTime}>
-        <li>{formattedDate(candle.openTime)} - {(candle.high)}</li>
-      </ul>
-    )
-  )
-
-  const showBearishObIndexes = bearishObIndexes.map((candle, i) => (
-    <ul key={i}>
-      <li>{candle}</li>
-    </ul>
-  ));
 
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
       <div>
-        {showCandles(sortedOrderBlocks)}
+        {/*<ShowCandles data={findBullishOB()}/>*/}
       </div>
-      <div>
-        {showCandles(findBullishOB())}
-      </div>
-      <div>
-        {showBearishObIndexes}
-      </div>
-      <SummaryOB/>
+      <FilterBullishOB outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex} bearishOBs={findBullishOB()}/>
     </div>
   );
 };
