@@ -1,19 +1,16 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "app/store";
 import {dataType} from "shared/api/getKlines";
 import ClosingTrade from "features/closingTrade/ClosingTrade";
+import {selectData} from "features/data/data.selector";
 
 type Props = {
   // orderBlocks: dataType[]
   orderBlocksIndexes: number[]
   candlesNumber: number
 }
-
-const ordBl = [21, 40, 182, 228, 244, 268]
-
 const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
-  const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
+  const data = useSelector(selectData)
 
   const isValidEntry = (candleOb: dataType, candleIter: dataType) => {
     if (candleOb.open > candleOb.close) {
@@ -44,7 +41,7 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
   }
 
 
-  const enteringCandleIndexes = enteringTrade(candles, orderBlocksIndexes, candlesNumber).sort((a,b)=>a.entering-b.entering)
+  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumber).sort((a,b)=>a.entering-b.entering)
 
   const enteringTrade_ = (candles: dataType[], orderBlocks: dataType[], candlesNumber: number) => {
     const enteringLongTrades = []

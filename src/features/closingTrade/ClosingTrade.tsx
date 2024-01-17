@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "app/store";
 import {dataType} from "shared/api/getKlines";
 import Input from "shared/Input/Input";
 import {formattedDate} from "shared/Date/formattedDate";
 import {isGreenCandle, isRedCandle} from "utils/actions";
+import {selectData} from "features/data/data.selector";
 
 type Props = {
   enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
@@ -12,7 +12,7 @@ type Props = {
 }
 
 const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
-  const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
+  const data = useSelector(selectData)
   const [ratio, setRatio] = useState(2) // выбор небоходимого соотношения риск\прибыль
   const [isShowOnlyRed, setIsShowOnlyRed] = useState(true)
   const [isShowOnlyGreen, setIsShowOnlyGreen] = useState(true)
@@ -81,7 +81,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
     return obj
   }
 
-  const res = closingLongTrade(candles, enteringCandleIndexes)
+  const res = closingLongTrade(data, enteringCandleIndexes)
 
   const earn = (res.win * ratio - res.lose)
 

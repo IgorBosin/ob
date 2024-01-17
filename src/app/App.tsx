@@ -7,7 +7,7 @@ import FindBearishOB from "features/OrderBlocks/ui/BearishOB/findBearishOB";
 import FindBullishOB from "features/OrderBlocks/ui/BullishOB/findBullishOB";
 
 const App = () => {
-  // console.log('Компонент App перерисован')
+  console.log('Компонент App перерисован')
 
   const [candlesNumber, setCandlesNumber] = useState(5)
   const [outsideOrderBlockCandleIndex, setOutsideOrderBlockCandleIndex] = useState(0)

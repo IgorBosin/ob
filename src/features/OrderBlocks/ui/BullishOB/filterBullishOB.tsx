@@ -1,9 +1,8 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "app/store";
 import {dataType} from "shared/api/getKlines";
 import SummaryOB from "features/OrderBlocks/summaryOB";
-import ShowCandles from "shared/ShowCandles/ShowCandles";
+import {selectData} from "features/data/data.selector";
 
 type Props = {
   outsideOrderBlockCandleIndex: number
@@ -11,7 +10,7 @@ type Props = {
 }
 
 const FilterBullishOB = ({outsideOrderBlockCandleIndex, bearishOBs}: Props) => {
-  const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
+  const data = useSelector(selectData)
 
   const sortOBBySomeNextCandleOutsideOB = (data: dataType[], orderBlockList: dataType[], outsideOrderBlockCandleIndex: number) => {
     if (!outsideOrderBlockCandleIndex) return orderBlockList
@@ -25,9 +24,9 @@ const FilterBullishOB = ({outsideOrderBlockCandleIndex, bearishOBs}: Props) => {
     return sortOBs
   }
 
-  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(candles, bearishOBs, outsideOrderBlockCandleIndex)
+  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, bearishOBs, outsideOrderBlockCandleIndex)
 
-  const bearishObIndexes = sortedOrderBlocks.map((findOrderBlock) => candles.indexOf(findOrderBlock));
+  const bearishObIndexes = sortedOrderBlocks.map((findOrderBlock) => data.indexOf(findOrderBlock));
 
 
   return (

@@ -1,78 +1,38 @@
 import React, {FC, useEffect, useState} from 'react';
-import {dataType, getKline} from "shared/api/getKlines";
 import {useDispatch, useSelector} from "react-redux";
 import Dropdown from "shared/Dropdown/Dropdown";
-import {setAppErrorAC, setDisabledButtonAC} from "app/appReducer";
-import {AppRootStateType} from "app/store";
-import {clearDataAC, fetchDataAC} from "features/data/dataReducer";
+import {clearData, fetchFirstData} from "features/data/data.slice";
 import DateComponent from "shared/Date/DateComponent";
 import {Button} from "@mui/material";
-import axios from "axios";
-import {importantDates} from "../../shared/Date/generalDates";
+import {importantDates} from "shared/Date/generalDates";
 import {formattedDate} from "shared/Date/formattedDate";
 import Input from "shared/Input/Input";
+import {selectData} from "features/data/data.selector";
 
 
 const Data: FC = () => {
   const dispatch = useDispatch()
   const [initialTime, setInitialTime] = useState<number | null>(importantDates.september27year23);
-  const data = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
+  const data = useSelector(selectData)
 
   const options: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
   const [timeFrame, setTimeFrame] = useState<TimeFrameType>('4h');
   const [symbols, setSymbols] = useState('BTC')
 
-  async function fetchFirstData() {
-    dispatch(clearDataAC());
-    try {
-      const responseData: dataType[] = await getKline(`${symbols}USDT`, timeFrame, initialTime as number);
-      dispatch(fetchDataAC(responseData));
-      dispatch(setDisabledButtonAC(true))
-    } catch (e) {
-      // dispatch(setAppErrorAC('Произошла ошибка при загрузке данных'));
-      if (axios.isAxiosError<ErrorType>(e)) {
-        const error = e.response ? e.response.data.messages[0].message : e.message
-        dispatch(setAppErrorAC(error));
-        return
-      }
-      dispatch(setAppErrorAC((e as Error).message));
-    }
-  }
-
   useEffect(() => {
-    let hasError = false; // Флаг для отслеживания ошибки
-    async function fetchData() {
-      if (data.length) {
-        try {
-          const responseData: dataType[] = await getKline("BTCUSDT", timeFrame, data[data.length - 1].closeTime)
-          if (!responseData.length) {
-            dispatch(setAppErrorAC('График закончился'))
-            return
-          }
-          dispatch(fetchDataAC(responseData))
-        } catch (e) {
-          // dispatch(setAppErrorAC('Произошла ошибка при загрузке данных'));
-          // hasError = true; // Устанавливаем флаг в true при ошибке
-          if (axios.isAxiosError<ErrorType>(e)) {
-            const error = e.response ? e.response.data.messages[0].message : e.message
-            dispatch(setAppErrorAC(error));
-            return
-          }
-          dispatch(setAppErrorAC((e as Error).message));
-        }
-      }
-    }
-
-    fetchData(); // Вызываем асинхронную функцию сразу
-    if (hasError) {
-      return;
+    if (data.length) {
+      dispatch(fetchFirstData({symbols, timeFrame, initialTime: data[data.length - 1].closeTime}))
     }
   }, [data]);
 
-
   const showTime = data.length
-    ? <li>выгружен график - {formattedDate(data[0].openTime)} - {formattedDate(data[data.length - 1].closeTime)}</li>
+    ? <li>({data.length}) {formattedDate(data[0].openTime)} - {formattedDate(data[data.length - 1].closeTime)}</li>
     : ''
+
+  const onClickFetchData = () => {
+    dispatch(clearData())
+    dispatch(fetchFirstData({symbols, timeFrame, initialTime}))
+  }
 
   return (
     <div style={{display: 'flex', alignItems: 'center'}}>
@@ -83,7 +43,11 @@ const Data: FC = () => {
                setSymbols(e.currentTarget.value)
              }}
              placeholder={symbols}/>
-      <Button onClick={fetchFirstData} color="success" variant="outlined">Загрузить график</Button>
+      <Button onClick={onClickFetchData}
+              color="success"
+              variant="outlined">
+        Загрузить график
+      </Button>
       {showTime}
     </div>
   );

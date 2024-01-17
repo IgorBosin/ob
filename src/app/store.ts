@@ -1,21 +1,23 @@
-import {combineReducers, legacy_createStore} from 'redux'
-import {appReducer} from "app/appReducer";
-import {dataReducer} from "features/data/dataReducer";
-import {configureStore} from "@reduxjs/toolkit";
+import {AnyAction, combineReducers, configureStore, ThunkAction, ThunkDispatch} from "@reduxjs/toolkit";
+import {appSlice} from "app/app.slice";
+import {dataSlice} from "features/data/data.slice";
 
-// объединяя reducer-ы с помощью combineReducers,
-// мы задаём структуру нашего единственного объекта-состояния
 const rootReducer = combineReducers({
-  app: appReducer,
-  data: dataReducer
+  app: appSlice,
+  data: dataSlice,
 })
-
-
-
 // непосредственно создаём store
-export const store = legacy_createStore(rootReducer)
+// export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+export const store = configureStore({reducer: rootReducer})
+
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
+
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AnyAction>
+
+// export type AppDispatch = typeof store.dispatch
+export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AnyAction>
+
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore
 window.store = store

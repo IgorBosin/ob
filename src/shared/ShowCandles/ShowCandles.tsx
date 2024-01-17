@@ -2,18 +2,18 @@ import {dataType} from "shared/api/getKlines";
 import {formattedDate} from "shared/Date/formattedDate";
 import React from 'react';
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "app/store";
+import {selectData} from "features/data/data.selector";
 
 type Props = {
-  data: dataType[]
+  candles: dataType[]
 }
 
-const ShowCandles = ({data}: Props) => {
-  const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
+const ShowCandles = ({candles}: Props) => {
+  const data = useSelector(selectData)
 
   const showCandles = (data: dataType[]) => data.map((candle) => (
       <ul key={candle.openTime}>
-        <li>{formattedDate(candle.openTime)} - {(candles.indexOf(candle))}</li>
+        <li>{formattedDate(candle.openTime)} - {(data.indexOf(candle))}</li>
       </ul>
     )
   )

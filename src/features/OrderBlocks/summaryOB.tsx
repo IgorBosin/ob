@@ -1,11 +1,5 @@
-import React, {useState} from 'react';
-import {useSelector} from "react-redux";
-import {AppRootStateType} from "app/store";
+import React from 'react';
 import {dataType} from "shared/api/getKlines";
-import {formattedDate} from "shared/Date/formattedDate";
-import OpenTrade from "features/openTrade/OpenTrade";
-import Input from "shared/Input/Input";
-import {isGreenCandle, isRedCandle} from "utils/actions";
 import ShowCandles from "shared/ShowCandles/ShowCandles";
 
 type Props = {
@@ -25,7 +19,7 @@ const SummaryOB = ({bearishOB = [], bullishOB = []}: Props) => {
 
   return (
     <div>
-      <ShowCandles data={orderBlocks}/>
+      <ShowCandles candles={orderBlocks}/>
       {/*<OpenTrade orderBlocksIndexes={orderBlocksIndexes} candlesNumber={candlesNumber}/>*/}
     </div>
 

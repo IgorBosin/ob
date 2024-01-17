@@ -1,10 +1,8 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "app/store";
-import {dataType} from "shared/api/getKlines";
 import {isGreenCandle} from "utils/actions";
-import ShowCandles from "shared/ShowCandles/ShowCandles";
 import FilterBearishOB from "features/OrderBlocks/ui/BearishOB/filterBearishOB";
+import {selectData} from "features/data/data.selector";
 
 type Props = {
   candlesNumber: number
@@ -12,20 +10,20 @@ type Props = {
 }
 
 const FindBearishOB = ({candlesNumber, outsideOrderBlockCandleIndex}: Props) => {
-  const candles = useSelector<AppRootStateType, dataType[]>(state => state.data.data)
+  const data = useSelector(selectData)
 
   const findBearishOB = () => {
     const result = [];
 
-    for (let i = 0; i < candles.length - candlesNumber; i++) {
+    for (let i = 0; i < data.length - candlesNumber; i++) {
       // Проверяем, что текущая свеча зеленая
-      if (isGreenCandle(candles[i])) {
+      if (isGreenCandle(data[i])) {
         let isFollowedByRed = true;
 
         // Проверяем последующие n свечей
         for (let j = 1; j <= candlesNumber; j++) {
           // Если хотя бы одна из следующих свечей не красная, то прерываем проверку
-          if (isGreenCandle(candles[i + j])) {
+          if (isGreenCandle(data[i + j])) {
             isFollowedByRed = false;
             break;
           }
@@ -33,7 +31,7 @@ const FindBearishOB = ({candlesNumber, outsideOrderBlockCandleIndex}: Props) => 
 
         // Если все n следующих свечей красные, добавляем текущую свечу в результат
         if (isFollowedByRed) {
-          result.push(candles[i]);
+          result.push(data[i]);
         }
       }
     }
