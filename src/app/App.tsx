@@ -5,6 +5,8 @@ import Data from "features/data/Data";
 import Input from "shared/Input/Input";
 import FindBearishOB from "features/OrderBlocks/ui/BearishOB/findBearishOB";
 import FindBullishOB from "features/OrderBlocks/ui/BullishOB/findBullishOB";
+import Dropdown from "shared/Dropdown/Dropdown";
+import SummaryOB from "features/OrderBlocks/summaryOB";
 
 const App = () => {
   console.log('Компонент App перерисован')
@@ -13,17 +15,33 @@ const App = () => {
   const [outsideOrderBlockCandleIndex, setOutsideOrderBlockCandleIndex] = useState(0)
 
 
+  const optionsBodyOrWickOutsideOB = ['wick', 'body'];
+  const [bodyOrWickOutsideOB, setBodyOrWickOutsideOB] = useState('body');
+
+
   return (
     <div>
-      <Input placeholder={outsideOrderBlockCandleIndex.toString()} label={'тело n-свечи выходит за ОБ'}
-             onChange={(e) => setOutsideOrderBlockCandleIndex(+e.currentTarget.value)}/>
-      <Input placeholder={candlesNumber.toString()} label={'Пар-р индикатора'} onChange={(e) => {
-        setCandlesNumber(+e.currentTarget.value)
-      }}/>
+      <div style={{display: 'flex'}}>
+        <Input placeholder={candlesNumber.toString()}
+               label={'Пар-р индикатора'}
+               onChange={e => setCandlesNumber(+e.currentTarget.value)}/>
+        <Input placeholder={outsideOrderBlockCandleIndex.toString()}
+               label={'n-свеча выходит за ОБ'}
+               onChange={e => setOutsideOrderBlockCandleIndex(+e.currentTarget.value)}/>
+        <Dropdown title={'Выход n-свечи за ОБ'}
+                  options={optionsBodyOrWickOutsideOB}
+                  selectedOption={bodyOrWickOutsideOB}
+                  setSelectedOption={setBodyOrWickOutsideOB}/>
+      </div>
       <Data/>
       <ErrorSnackbar/>
-      <FindBearishOB outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex} candlesNumber={candlesNumber}/>
-      <FindBullishOB outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex} candlesNumber={candlesNumber}/>
+      <FindBearishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
+                     outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
+                     candlesNumber={candlesNumber}/>
+      <FindBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
+                     outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
+                     candlesNumber={candlesNumber}/>
+      <SummaryOB/>
     </div>
   );
 };

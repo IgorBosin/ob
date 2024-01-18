@@ -7,9 +7,10 @@ import {selectData} from "features/data/data.selector";
 type Props = {
   candlesNumber: number
   outsideOrderBlockCandleIndex: number
+  bodyOrWickOutsideOB: string
 }
 
-const FindBullishOB = ({candlesNumber, outsideOrderBlockCandleIndex}: Props) => {
+const FindBullishOB = ({bodyOrWickOutsideOB, candlesNumber, outsideOrderBlockCandleIndex}: Props) => {
   const data = useSelector(selectData)
 
   const findBullishOB = () => {
@@ -44,9 +45,11 @@ const FindBullishOB = ({candlesNumber, outsideOrderBlockCandleIndex}: Props) => 
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
       <div>
-        {/*<ShowCandles data={findBullishOB()}/>*/}
+        {/*<ShowCandles candles={findBullishOB()}/>*/}
       </div>
-      <FilterBullishOB outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex} bearishOBs={findBullishOB()}/>
+      <FilterBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
+                       outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
+                       bearishOBs={findBullishOB()}/>
     </div>
   );
 };

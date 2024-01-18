@@ -1,10 +1,12 @@
 import {AnyAction, combineReducers, configureStore, ThunkAction, ThunkDispatch} from "@reduxjs/toolkit";
 import {appSlice} from "app/app.slice";
 import {dataSlice} from "features/data/data.slice";
+import {orderBlocksSlice} from "features/OrderBlocks/ui/model/orderBlocks.slice";
 
 const rootReducer = combineReducers({
   app: appSlice,
   data: dataSlice,
+  orderBlocks: orderBlocksSlice
 })
 // непосредственно создаём store
 // export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));

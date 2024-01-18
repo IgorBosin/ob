@@ -11,7 +11,7 @@ type Props = {
 const ShowCandles = ({candles}: Props) => {
   const data = useSelector(selectData)
 
-  const showCandles = (data: dataType[]) => data.map((candle) => (
+  const showCandles = () => candles.map((candle) => (
       <ul key={candle.openTime}>
         <li>{formattedDate(candle.openTime)} - {(data.indexOf(candle))}</li>
       </ul>
@@ -20,7 +20,7 @@ const ShowCandles = ({candles}: Props) => {
 
   return (
     <div>
-      {showCandles(data)}
+      {showCandles()}
     </div>
   );
 };

@@ -15,8 +15,8 @@ const Data: FC = () => {
   const [initialTime, setInitialTime] = useState<number | null>(importantDates.september27year23);
   const data = useSelector(selectData)
 
-  const options: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
-  const [timeFrame, setTimeFrame] = useState<TimeFrameType>('4h');
+  const optionsTimeFrame: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
+  const [timeFrame, setTimeFrame] = useState('4h');
   const [symbols, setSymbols] = useState('BTC')
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Data: FC = () => {
   return (
     <div style={{display: 'flex', alignItems: 'center'}}>
       <DateComponent time={initialTime} setTime={setInitialTime}/>
-      <Dropdown title={'TimeFrame'} options={options} selectedOption={timeFrame} setSelectedOption={setTimeFrame}/>
+      <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame} setSelectedOption={setTimeFrame}/>
       <Input margin={"none"} type={"text"} label={'монета'}
              onChange={(e) => {
                setSymbols(e.currentTarget.value)

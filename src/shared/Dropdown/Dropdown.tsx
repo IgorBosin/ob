@@ -1,18 +1,17 @@
-import React, {FC} from 'react';
-import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import React, {Dispatch, SetStateAction} from 'react';
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from '@mui/material';
 
 type Props = {
-  options: TimeFrameType[];
-  setSelectedOption: (selectedOption: TimeFrameType) => void
-  selectedOption: TimeFrameType
-  title: string
+  options: string[];
+  setSelectedOption: Dispatch<SetStateAction<string>>;
+  selectedOption: string;
+  title: string;
+  disabled?: boolean
 };
 
-const Dropdown: FC<Props> = ({options, setSelectedOption, selectedOption, title}) => {
-
-
+const Dropdown = ({options, setSelectedOption, selectedOption, title, disabled}: Props) => {
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedOption(event.target.value as TimeFrameType);
+    setSelectedOption(event.target.value as string);
   };
 
   return (
@@ -26,8 +25,13 @@ const Dropdown: FC<Props> = ({options, setSelectedOption, selectedOption, title}
           value={selectedOption}
           label={title}
           onChange={handleChange}
+          disabled={disabled}
         >
-          {options.map(el => <MenuItem key={el} value={el}>{el}</MenuItem>)}
+          {options.map((el) => (
+            <MenuItem key={el} value={el}>
+              {el}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </div>
@@ -35,21 +39,3 @@ const Dropdown: FC<Props> = ({options, setSelectedOption, selectedOption, title}
 };
 
 export default Dropdown;
-
-
-export type TimeFrameType =
-  '1m'
-  | '3m'
-  | '5m'
-  | '15m'
-  | '30m'
-  | '1h'
-  | '2h'
-  | '4h'
-  | '6h'
-  | '8h'
-  | '12h'
-  | '1d'
-  | '3d'
-  | '1w'
-  | '1mo';
