@@ -1,8 +1,0 @@
-import {AppRootStateType} from "app/store";
-import {dataType} from "shared/api/getKlines";
-
-
-export const selectBullishOB = (state: AppRootStateType):dataType[] => state.orderBlocks.bullishOB
-export const selectBearishOB = (state: AppRootStateType):dataType[] => state.orderBlocks.bearishOB
-export const selectAllOB = (state: AppRootStateType):dataType[] => state.orderBlocks.allOB
-

@@ -49,7 +49,7 @@ const FindBullishOB = ({bodyOrWickOutsideOB, candlesNumber, outsideOrderBlockCan
       </div>
       <FilterBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
                        outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
-                       bearishOBs={findBullishOB()}/>
+                       bullishOBs={findBullishOB()}/>
     </div>
   );
 };

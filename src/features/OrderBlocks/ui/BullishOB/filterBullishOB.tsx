@@ -2,16 +2,17 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {dataType} from "shared/api/getKlines";
 import {selectData} from "features/data/data.selector";
-import {getBullishOB} from "features/OrderBlocks/ui/model/orderBlocks.slice";
-import {selectBullishOB} from "features/OrderBlocks/ui/model/orderBlocks.selector";
+import {getBullishOB} from "features/OrderBlocks/model/orderBlocks.slice";
+import {selectBullishOB} from "features/OrderBlocks/model/orderBlocks.selector";
+import ShowCandles from "shared/ShowCandles/ShowCandles";
 
 type Props = {
   outsideOrderBlockCandleIndex: number
-  bearishOBs: dataType[]
+  bullishOBs: dataType[]
   bodyOrWickOutsideOB: string
 }
 
-const FilterBullishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bearishOBs}: Props) => {
+const FilterBullishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bullishOBs}: Props) => {
   const data = useSelector(selectData)
   const bullishOB = useSelector(selectBullishOB)
   const dispatch = useDispatch()
@@ -19,6 +20,17 @@ const FilterBullishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bea
   useEffect(() => {
     dispatch(getBullishOB({bullOB: sortedOrderBlocks}))
   }, [bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, data]);
+
+  const sortOBByLiquidityWithdrawal = (data: dataType[], orderBlockList: dataType[]) => {
+    const sortOB = []
+    for (const orderBlock of orderBlockList) {
+      const obIndex = data.indexOf(orderBlock)
+      if (data[obIndex].low < data[obIndex - 1].low) {
+        sortOB.push(orderBlock)
+      }
+    }
+    return sortOB
+  }
 
   const sortOBBySomeNextCandleOutsideOB = (data: dataType[], orderBlockList: dataType[], outsideOrderBlockCandleIndex: number) => {
     if (!outsideOrderBlockCandleIndex) return orderBlockList
@@ -41,13 +53,11 @@ const FilterBullishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bea
     return sortOBs
   }
 
-  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, bearishOBs, outsideOrderBlockCandleIndex)
-
-  const bearishObIndexes = sortedOrderBlocks.map((findOrderBlock) => data.indexOf(findOrderBlock));
+  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, sortOBByLiquidityWithdrawal(data, bullishOBs), outsideOrderBlockCandleIndex)
 
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
-      {/*<ShowCandles candles={bullishOB}/>*/}
+      {/*<ShowCandles candles={sortedOrderBlocks}/>*/}
     </div>
   );
 };

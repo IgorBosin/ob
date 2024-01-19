@@ -3,6 +3,7 @@ import {useSelector} from "react-redux";
 import {dataType} from "shared/api/getKlines";
 import ClosingTrade from "features/closingTrade/ClosingTrade";
 import {selectData} from "features/data/data.selector";
+import {formattedDate} from "shared/Date/formattedDate";
 
 type Props = {
   // orderBlocks: dataType[]
@@ -20,14 +21,14 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
     }
   }
 
-  const enteringTrade = (candles: dataType[], orderBlocks: number[], candlesNumber: number): {
+  const enteringTrade = (data: dataType[], orderBlocks: number[], candlesNumber: number): {
     entering: number,
     orderBlock: number
   }[] => {
     const enteringCandleIndexes = [];
     for (const ob of orderBlocks) {
-      for (let i = ob + candlesNumber + 1; i < candles.length; i++) {
-        if (isValidEntry(candles[ob], candles[i])) {
+      for (let i = ob + candlesNumber + 1; i < data.length; i++) {
+        if (isValidEntry(data[ob], data[i])) {
           // enteringCandleIndexes.push(candles[i].high); // посмотреть хай свечи на которой зашли в сделку
           enteringCandleIndexes.push({
             entering: i,
@@ -40,9 +41,7 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
     return enteringCandleIndexes;
   }
 
-
-  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumber).sort((a,b)=>a.entering-b.entering)
-
+  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumber).sort((a, b) => a.entering - b.entering)
   const enteringTrade_ = (candles: dataType[], orderBlocks: dataType[], candlesNumber: number) => {
     const enteringLongTrades = []
 
@@ -67,16 +66,17 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
     return enteringLongTrades
   }
 
-
-
   console.log('перерисован компонент OpenTrade')
 
   return (
     <div style={{display: "flex"}}>
-      {/*<div>*/}
-      {/*  {enteringCandleIndexes.map(el => <li key={el.entering}>{candles[el.entering].high} - {candles[ el.orderBlock].high}</li>)}*/}
-      {/*</div>*/}
       <ClosingTrade enteringCandleIndexes={enteringCandleIndexes} orderBlocksIndexes={orderBlocksIndexes}/>
+      <div>
+        {enteringCandleIndexes.map(el =>
+          <li key={el.entering}>
+            {formattedDate(data[el.orderBlock].openTime)} - {formattedDate(data[el.entering].openTime)}
+          </li>)  }
+      </div>
     </div>
   );
 };

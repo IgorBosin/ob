@@ -7,13 +7,17 @@ import FindBearishOB from "features/OrderBlocks/ui/BearishOB/findBearishOB";
 import FindBullishOB from "features/OrderBlocks/ui/BullishOB/findBullishOB";
 import Dropdown from "shared/Dropdown/Dropdown";
 import SummaryOB from "features/OrderBlocks/summaryOB";
+import {useDispatch, useSelector} from "react-redux";
+import {changeFactorOB} from "features/OrderBlocks/model/orderBlocks.slice";
+import {selectBullishOB, selectFactorOB} from "features/OrderBlocks/model/orderBlocks.selector";
 
 const App = () => {
   console.log('Компонент App перерисован')
 
+  const dispatch = useDispatch()
   const [candlesNumber, setCandlesNumber] = useState(5)
   const [outsideOrderBlockCandleIndex, setOutsideOrderBlockCandleIndex] = useState(0)
-
+  const factorOB = useSelector(selectFactorOB)
 
   const optionsBodyOrWickOutsideOB = ['wick', 'body'];
   const [bodyOrWickOutsideOB, setBodyOrWickOutsideOB] = useState('body');
@@ -22,6 +26,9 @@ const App = () => {
   return (
     <div>
       <div style={{display: 'flex'}}>
+        <Input placeholder={factorOB.toString()}
+               label={'Расширение ОБ'}
+               onChange={e => dispatch(changeFactorOB({factor: +e.currentTarget.value}))}/>
         <Input placeholder={candlesNumber.toString()}
                label={'Пар-р индикатора'}
                onChange={e => setCandlesNumber(+e.currentTarget.value)}/>
@@ -41,7 +48,7 @@ const App = () => {
       <FindBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
                      outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
                      candlesNumber={candlesNumber}/>
-      <SummaryOB/>
+      <SummaryOB candlesNumber={candlesNumber}/>
     </div>
   );
 };

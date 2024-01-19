@@ -1,13 +1,20 @@
 import React, {useEffect} from 'react';
 import ShowCandles from "shared/ShowCandles/ShowCandles";
 import {useDispatch, useSelector} from "react-redux";
-import {selectAllOB, selectBearishOB, selectBullishOB} from "features/OrderBlocks/ui/model/orderBlocks.selector";
-import {getAllOB} from "features/OrderBlocks/ui/model/orderBlocks.slice";
+import {selectAllOB, selectBearishOB, selectBullishOB} from "features/OrderBlocks/model/orderBlocks.selector";
+import {getAllOB} from "features/OrderBlocks/model/orderBlocks.slice";
+import {selectData} from "features/data/data.selector";
+import OpenTrade from "features/openTrade/OpenTrade";
 
-const SummaryOB = () => {
+type Props = {
+  candlesNumber: number
+}
+
+const SummaryOB = ({candlesNumber}: Props) => {
+  const data = useSelector(selectData)
+  const allOB = useSelector(selectAllOB)
   const bearishOB = useSelector(selectBearishOB)
   const bullishOB = useSelector(selectBullishOB)
-  const allOB = useSelector(selectAllOB)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -15,8 +22,11 @@ const SummaryOB = () => {
     dispatch(getAllOB({allOB: orderBlocks}))
   }, [bearishOB, bullishOB]);
 
+  const allOrderBlocksIndexes: number[] = allOB.map((findOrderBlock) => data.indexOf(findOrderBlock));
+
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
+      <OpenTrade orderBlocksIndexes={allOrderBlocksIndexes} candlesNumber={candlesNumber}/>
       <div>
         <ul>all</ul>
         <ShowCandles candles={allOB}/>
