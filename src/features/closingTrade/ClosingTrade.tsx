@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {dataType} from "shared/api/getKlines";
 import Input from "shared/Input/Input";
 import {formattedDate} from "shared/Date/formattedDate";
-import {isGreenCandle, isRedCandle} from "utils/actions";
+import {getLengthCandle, isGreenCandle, isRedCandle} from "utils/actions";
 import {selectData} from "features/data/data.selector";
 
 type Props = {
@@ -28,9 +28,13 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
     }
     // проверяем enteringCandleIndexes пробила ли она вниз до лоя orderBlocks.
     for (const enterCandle of enteringCandleIndexes) {
-      const lengthCandle = (candles[enterCandle.orderBlock].high - candles[enterCandle.orderBlock].low) * ratio
-      const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].high
-      const profitForBearishOB = candles[enterCandle.orderBlock].low - lengthCandle
+      // const lengthCandle = (candles[enterCandle.orderBlock].high - candles[enterCandle.orderBlock].low) * ratio
+      const lengthCandle = getLengthCandle(candles[enterCandle.orderBlock]) * ratio
+      const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].low + getLengthCandle(candles[enterCandle.orderBlock])
+      const profitForBearishOB = candles[enterCandle.orderBlock].high - getLengthCandle(candles[enterCandle.orderBlock]) - lengthCandle
+      const a =  candles[enterCandle.orderBlock].low
+      debugger
+      // const profitForBearishOB = candles[enterCandle.orderBlock].low - lengthCandle
 
       if (isShowOnlyGreen) {
         // бычий ОБ (свеча красная)
@@ -121,7 +125,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
     return maxCount
   }
 
-  const expectancy = (resInfo*ratio/100)-(1-resInfo/100)
+  const expectancy = (resInfo * ratio / 100) - (1 - resInfo / 100)
 
   const numberOfLostTradesInRow = findMostFrequentNumber(res.tradesInRow.point)
 
@@ -129,7 +133,8 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   return (
     <div>
       <input type="checkbox" checked={isShowOnlyRed} onChange={() => setIsShowOnlyRed(!isShowOnlyRed)}/> - Red OB
-      <input type="checkbox" checked={isShowOnlyGreen} onChange={() => setIsShowOnlyGreen(!isShowOnlyGreen)}/> - Green OB
+      <input type="checkbox" checked={isShowOnlyGreen} onChange={() => setIsShowOnlyGreen(!isShowOnlyGreen)}/> - Green
+      OB
       <div>
         <Input label={'RR'} placeholder={ratio.toString()} onChange={(e) => setRatio(+e.currentTarget.value)}/>
         <ul>всего сделок - {res.win + res.lose}</ul>

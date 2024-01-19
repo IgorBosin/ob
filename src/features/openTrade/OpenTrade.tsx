@@ -4,6 +4,7 @@ import {dataType} from "shared/api/getKlines";
 import ClosingTrade from "features/closingTrade/ClosingTrade";
 import {selectData} from "features/data/data.selector";
 import {formattedDate} from "shared/Date/formattedDate";
+import {isGreenCandle, isRedCandle, getLengthCandle} from "utils/actions";
 
 type Props = {
   // orderBlocks: dataType[]
@@ -14,19 +15,22 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
   const data = useSelector(selectData)
 
   const isValidEntry = (candleOb: dataType, candleIter: dataType) => {
-    if (candleOb.open > candleOb.close) {
-      return candleOb.high > candleIter.low;
+    // if (isGreenCandle(candleOb)) {
+    if (isRedCandle(candleOb)) {
+      const a = candleOb.low + getLengthCandle(candleOb)
+      return a > candleIter.low;
     } else {
-      return candleOb.low < candleIter.high;
+      const a = candleOb.high - getLengthCandle(candleOb)
+      return a < candleIter.high;
     }
   }
 
-  const enteringTrade = (data: dataType[], orderBlocks: number[], candlesNumber: number): {
+  const enteringTrade = (data: dataType[], orderBlocksIndexes: number[], candlesNumber: number): {
     entering: number,
     orderBlock: number
   }[] => {
     const enteringCandleIndexes = [];
-    for (const ob of orderBlocks) {
+    for (const ob of orderBlocksIndexes) {
       for (let i = ob + candlesNumber + 1; i < data.length; i++) {
         if (isValidEntry(data[ob], data[i])) {
           // enteringCandleIndexes.push(candles[i].high); // посмотреть хай свечи на которой зашли в сделку
@@ -75,7 +79,7 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
         {enteringCandleIndexes.map(el =>
           <li key={el.entering}>
             {formattedDate(data[el.orderBlock].openTime)} - {formattedDate(data[el.entering].openTime)}
-          </li>)  }
+          </li>)}
       </div>
     </div>
   );

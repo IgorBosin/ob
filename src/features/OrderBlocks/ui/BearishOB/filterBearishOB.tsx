@@ -14,7 +14,6 @@ type Props = {
 
 const FilterBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bearishOBs}: Props) => {
   const data = useSelector(selectData)
-  const bearishOB = useSelector(selectBearishOB)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -53,7 +52,10 @@ const FilterBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bea
     return sortOB
   }
 
-  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, sortOBByLiquidityWithdrawal(data, bearishOBs), outsideOrderBlockCandleIndex)
+const oBByLiquidityWithdrawal  = sortOBByLiquidityWithdrawal(data, bearishOBs)
+
+  // const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, bearishOBs, outsideOrderBlockCandleIndex)
+  const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, oBByLiquidityWithdrawal, outsideOrderBlockCandleIndex)
 
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
