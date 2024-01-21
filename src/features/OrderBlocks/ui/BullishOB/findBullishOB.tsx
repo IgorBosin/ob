@@ -25,7 +25,8 @@ const FindBullishOB = ({bodyOrWickOutsideOB, candlesNumber, outsideOrderBlockCan
         // Проверяем последующие n свечей
         for (let j = 1; j <= candlesNumber; j++) {
           // Если хотя бы одна из следующих свечей не красная, то прерываем проверку
-          if (isRedCandle(data[i + j])) {
+          if (isRedCandle(data[i + j]) || data[i + j].open === data[i + j].close) {
+          // if (isRedCandle(data[i + j])) {
             isFollowedByRed = false;
             break;
           }

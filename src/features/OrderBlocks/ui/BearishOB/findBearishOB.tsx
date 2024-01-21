@@ -24,7 +24,8 @@ const FindBearishOB = ({bodyOrWickOutsideOB, candlesNumber, outsideOrderBlockCan
         // Проверяем последующие n свечей
         for (let j = 1; j <= candlesNumber; j++) {
           // Если хотя бы одна из следующих свечей не красная, то прерываем проверку
-          if (isGreenCandle(data[i + j])) {
+          if (isGreenCandle(data[i + j]) || data[i + j].open === data[i + j].close) {
+            // if (isGreenCandle(data[i + j])) {
             isFollowedByRed = false;
             break;
           }

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {dataType} from "shared/api/getKlines";
 import {selectData} from "features/data/data.selector";
 import {getBearishOB} from "features/OrderBlocks/model/orderBlocks.slice";
-import {selectBearishOB} from "features/OrderBlocks/model/orderBlocks.selector";
+import {selectBearishOB, selectLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.selector";
 import ShowCandles from "shared/ShowCandles/ShowCandles";
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 
 const FilterBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bearishOBs}: Props) => {
   const data = useSelector(selectData)
+  const liquidityWithdrawal = useSelector(selectLiquidityWithdrawal)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -42,6 +43,7 @@ const FilterBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bea
   }
 
   const sortOBByLiquidityWithdrawal = (data: dataType[], orderBlockList: dataType[]) => {
+    if (!liquidityWithdrawal) return orderBlockList
     const sortOB = []
     for (const orderBlock of orderBlockList) {
       const obIndex = data.indexOf(orderBlock)
@@ -52,9 +54,8 @@ const FilterBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bea
     return sortOB
   }
 
-const oBByLiquidityWithdrawal  = sortOBByLiquidityWithdrawal(data, bearishOBs)
+  const oBByLiquidityWithdrawal = sortOBByLiquidityWithdrawal(data, bearishOBs)
 
-  // const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, bearishOBs, outsideOrderBlockCandleIndex)
   const sortedOrderBlocks = sortOBBySomeNextCandleOutsideOB(data, oBByLiquidityWithdrawal, outsideOrderBlockCandleIndex)
 
   return (

@@ -7,7 +7,8 @@ const slice = createSlice({
     allOB: [] as dataType[],
     bearishOB: [] as dataType[],
     bullishOB: [] as dataType[],
-    factorOB: 0
+    factorOB: 1,
+    liquidityWithdrawal: false
   },
   reducers: {
     getAllOB: (state, action: PayloadAction<{ allOB: dataType[] }>) => {
@@ -21,9 +22,13 @@ const slice = createSlice({
     },
     changeFactorOB: (state, action: PayloadAction<{ factor: number }>) => {
       state.factorOB = action.payload.factor
-    }
+    },
+    setLiquidityWithdrawal: (state, action: PayloadAction<{ liquidityWithdrawal: boolean }>) => {
+      state.liquidityWithdrawal = action.payload.liquidityWithdrawal
+    },
+
   }
 })
 
 export const orderBlocksSlice = slice.reducer
-export const {getBearishOB, getBullishOB, getAllOB, changeFactorOB} = slice.actions
+export const {getBearishOB, getBullishOB, getAllOB, changeFactorOB, setLiquidityWithdrawal} = slice.actions

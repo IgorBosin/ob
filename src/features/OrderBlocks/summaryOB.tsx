@@ -28,15 +28,15 @@ const SummaryOB = ({candlesNumber}: Props) => {
     <div style={{display: 'flex', flexDirection: 'row'}}>
       <OpenTrade orderBlocksIndexes={allOrderBlocksIndexes} candlesNumber={candlesNumber}/>
       <div>
-        <ul>all</ul>
+        <ul>all({allOB.length})</ul>
         <ShowCandles candles={allOB}/>
       </div>
       <div>
-        <ul>bull</ul>
+        <ul>bull({bullishOB.length})</ul>
         <ShowCandles candles={bullishOB}/>
       </div>
       <div>
-        <ul>bear</ul>
+        <ul>bear({bearishOB.length})</ul>
         <ShowCandles candles={bearishOB}/>
       </div>
     </div>

@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {dataType} from "shared/api/getKlines";
 import Input from "shared/Input/Input";
 import {formattedDate} from "shared/Date/formattedDate";
 import {getLengthCandle, isGreenCandle, isRedCandle} from "utils/actions";
 import {selectData} from "features/data/data.selector";
+import {selectFactorOB, selectLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.selector";
+import {Checkbox, FormControlLabel} from "@mui/material";
+import {setLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.slice";
 
 type Props = {
   enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
@@ -16,6 +19,10 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   const [ratio, setRatio] = useState(2) // выбор небоходимого соотношения риск\прибыль
   const [isShowOnlyRed, setIsShowOnlyRed] = useState(true)
   const [isShowOnlyGreen, setIsShowOnlyGreen] = useState(true)
+  const factorOB = useSelector(selectFactorOB)
+  const liquidityWithdrawal = useSelector(selectLiquidityWithdrawal)
+  const dispatch = useDispatch()
+
 
   const closingLongTrade = (candles: dataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
     let obj = {
@@ -29,11 +36,10 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
     // проверяем enteringCandleIndexes пробила ли она вниз до лоя orderBlocks.
     for (const enterCandle of enteringCandleIndexes) {
       // const lengthCandle = (candles[enterCandle.orderBlock].high - candles[enterCandle.orderBlock].low) * ratio
-      const lengthCandle = getLengthCandle(candles[enterCandle.orderBlock]) * ratio
-      const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].low + getLengthCandle(candles[enterCandle.orderBlock])
-      const profitForBearishOB = candles[enterCandle.orderBlock].high - getLengthCandle(candles[enterCandle.orderBlock]) - lengthCandle
-      const a =  candles[enterCandle.orderBlock].low
-      debugger
+      const lengthCandle = getLengthCandle(candles[enterCandle.orderBlock], factorOB) * ratio
+      const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].low + getLengthCandle(candles[enterCandle.orderBlock], factorOB)
+      const profitForBearishOB = candles[enterCandle.orderBlock].high - getLengthCandle(candles[enterCandle.orderBlock], factorOB) - lengthCandle
+      const a = candles[enterCandle.orderBlock].low
       // const profitForBearishOB = candles[enterCandle.orderBlock].low - lengthCandle
 
       if (isShowOnlyGreen) {
@@ -91,9 +97,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 
   const resInfo = res.win / (res.win + res.lose) * 100
 
-  // const arrEarn = res.tradesInRow.date.sort((a, b) => a - b).map(el => <li>{formattedDate(el)}</li>)
   const arrEarn = res.tradesInRow.date.map(el => <li>{formattedDate(el)}</li>)
-
 
   function findMostFrequentNumber(arr: number[]) {
     let currentNumber = arr[0];
@@ -132,14 +136,27 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   console.log('перерисован компонент CloseTrade')
   return (
     <div>
-      <input type="checkbox" checked={isShowOnlyRed} onChange={() => setIsShowOnlyRed(!isShowOnlyRed)}/> - Red OB
-      <input type="checkbox" checked={isShowOnlyGreen} onChange={() => setIsShowOnlyGreen(!isShowOnlyGreen)}/> - Green
-      OB
+      <FormControlLabel
+        control={<Checkbox checked={isShowOnlyRed} onChange={() => setIsShowOnlyRed(!isShowOnlyRed)}/>}
+        label="Red OB"
+        labelPlacement="bottom"
+      />
+      <FormControlLabel
+        control={<Checkbox checked={isShowOnlyGreen} onChange={() => setIsShowOnlyGreen(!isShowOnlyGreen)}/>}
+        label="Green OB"
+        labelPlacement="bottom"
+      />
+      <FormControlLabel
+        control={<Checkbox checked={liquidityWithdrawal}
+                           onChange={() => dispatch(setLiquidityWithdrawal({liquidityWithdrawal: !liquidityWithdrawal}))}/>}
+        label="Снят-е ликв-ти(треб обнов граф)"
+        labelPlacement="bottom"
+      />
       <div>
         <Input label={'RR'} placeholder={ratio.toString()} onChange={(e) => setRatio(+e.currentTarget.value)}/>
-        <ul>всего сделок - {res.win + res.lose}</ul>
-        <ul>WIN - {res.win}. С учетом соотношения: {res.win * ratio} </ul>
-        <ul>LOSE - {res.lose}  </ul>
+        <ul>всего сделок: {res.win + res.lose}</ul>
+        <ul>WIN: {res.win}. С учетом соотношения: {res.win * ratio} </ul>
+        <ul>LOSE: {res.lose}  </ul>
         <ul>сколько заработал единиц риска: {earn}</ul>
         <ul>какой % прибыльных сделок: {resInfo}</ul>
         <ul>максимально возможное количество проигранных сделок подряд: {numberOfLostTradesInRow}</ul>
