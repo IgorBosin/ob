@@ -11,11 +11,7 @@ import {getAllOB} from "features/OrderBlocks/model/orderBlocks.slice";
 import {selectData} from "features/data/data.selector";
 import OpenTrade from "features/openTrade/OpenTrade";
 
-type Props = {
-
-}
-
-const SummaryOB = ({}: Props) => {
+const SummaryOB = () => {
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
   const data = useSelector(selectData)
   const allOB = useSelector(selectAllOB)

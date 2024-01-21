@@ -1,27 +1,20 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React from 'react';
+import {useSelector} from "react-redux";
 import {isGreenCandle} from "utils/actions";
-import FilterBearishOB from "features/OrderBlocks/ui/BearishOB/filterBearishOB";
+import FilterBearOBByLiquidityWithdrawal
+  from "features/OrderBlocks/ui/BearishOB/filterOBByLiquidityWithdrawal/filterBearOBByLiquidityWithdrawal";
 import {selectData} from "features/data/data.selector";
-import {getBearishOB} from "features/OrderBlocks/model/orderBlocks.slice";
-import {selectBearishOB, selectCandlesNumberForInitializeOB} from "features/OrderBlocks/model/orderBlocks.selector";
-import ShowCandles from "shared/ShowCandles/ShowCandles";
+import {selectCandlesNumberForInitializeOB} from "features/OrderBlocks/model/orderBlocks.selector";
 
-type Props = {
-  outsideOrderBlockCandleIndex: number
-  bodyOrWickOutsideOB: string
-}
-
-const FindBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex}: Props) => {
+const FindBearishOB = () => {
   const data = useSelector(selectData)
-  const dispatch = useDispatch()
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
-  const bearishOB = useSelector(selectBearishOB)
 
   const findBearishOB = () => {
     const result = [];
 
     for (let i = 0; i < data.length - candlesNumberForInitializeOB; i++) {
+
       // Проверяем, что текущая свеча зеленая
       if (isGreenCandle(data[i])) {
         let isFollowedByRed = true;
@@ -42,25 +35,13 @@ const FindBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex}: Prop
         }
       }
     }
-
     return result;
   };
 
-
-  useEffect(() => {
-    dispatch(getBearishOB({bearOB: findBearishOB()}))
-  }, [data, candlesNumberForInitializeOB]);
-
   return (
-    <div style={{display: 'flex', flexDirection: 'row'}}>
-      <div>
-        <ShowCandles candles={bearishOB}/>
-      </div>
-      <FilterBearishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
-                       outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
-                       bearishOBs={findBearishOB()}/>
+    <div>
+      <FilterBearOBByLiquidityWithdrawal bearishOBs={findBearishOB()}/>
     </div>
   );
 };
-
 export default FindBearishOB;

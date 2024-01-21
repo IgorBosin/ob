@@ -1,9 +1,10 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 import {isRedCandle} from "utils/actions";
-import FilterBullishOB from "features/OrderBlocks/ui/BullishOB/filterBullishOB";
 import {selectData} from "features/data/data.selector";
 import {selectCandlesNumberForInitializeOB} from "features/OrderBlocks/model/orderBlocks.selector";
+import FilterBullOBByLiquidityWithdrawal
+  from "features/OrderBlocks/ui/BullishOB/filterOBByLiquidityWithdrawal/filterBullOBByLiquidityWithdrawal";
 
 type Props = {
   outsideOrderBlockCandleIndex: number
@@ -39,21 +40,13 @@ const FindBullishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex}: Prop
         }
       }
     }
-
     return result;
   };
 
-
   return (
-    <div style={{display: 'flex', flexDirection: 'row'}}>
-      <div>
-        {/*<ShowCandles candles={findBullishOB()}/>*/}
-      </div>
-      <FilterBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
-                       outsideOrderBlockCandleIndex={outsideOrderBlockCandleIndex}
-                       bullishOBs={findBullishOB()}/>
+    <div>
+      <FilterBullOBByLiquidityWithdrawal bullishOBs={findBullishOB()}/>
     </div>
   );
 };
-
 export default FindBullishOB;

@@ -9,7 +9,9 @@ const slice = createSlice({
     bullishOB: [] as dataType[],
     factorOB: 1,
     liquidityWithdrawal: false,
-    candlesNumberForInitializeOB: 5
+    candlesNumberForInitializeOB: 5,
+    currentCandleMustBeOutsideOB: 0,
+    bodyOrWickOutsideOB: 'body'
   },
   reducers: {
     getAllOB: (state, action: PayloadAction<{ allOB: dataType[] }>) => {
@@ -30,6 +32,12 @@ const slice = createSlice({
     setCandlesNumberForInitializeOB: (state, action: PayloadAction<{ candlesNumberForInitializeOB: number }>) => {
       state.candlesNumberForInitializeOB = action.payload.candlesNumberForInitializeOB
     },
+    changeBodyOrWickOutsideOB: (state, action: PayloadAction<{ bodyOrWickOutsideOB: string }>) => {
+      state.bodyOrWickOutsideOB = action.payload.bodyOrWickOutsideOB
+    },
+    changeCurrentCandleMustBeOutsideOB: (state, action: PayloadAction<{ currentCandleMustBeOutsideOB: number }>) => {
+      state.currentCandleMustBeOutsideOB = action.payload.currentCandleMustBeOutsideOB
+    },
   }
 })
 
@@ -40,5 +48,7 @@ export const {
   getAllOB,
   changeFactorOB,
   setLiquidityWithdrawal,
-  setCandlesNumberForInitializeOB
+  setCandlesNumberForInitializeOB,
+  changeCurrentCandleMustBeOutsideOB,
+  changeBodyOrWickOutsideOB
 } = slice.actions
