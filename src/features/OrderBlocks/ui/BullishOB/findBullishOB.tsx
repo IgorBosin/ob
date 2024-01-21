@@ -3,30 +3,31 @@ import {useSelector} from "react-redux";
 import {isRedCandle} from "utils/actions";
 import FilterBullishOB from "features/OrderBlocks/ui/BullishOB/filterBullishOB";
 import {selectData} from "features/data/data.selector";
+import {selectCandlesNumberForInitializeOB} from "features/OrderBlocks/model/orderBlocks.selector";
 
 type Props = {
-  candlesNumber: number
   outsideOrderBlockCandleIndex: number
   bodyOrWickOutsideOB: string
 }
 
-const FindBullishOB = ({bodyOrWickOutsideOB, candlesNumber, outsideOrderBlockCandleIndex}: Props) => {
+const FindBullishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex}: Props) => {
   const data = useSelector(selectData)
+  const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
 
   const findBullishOB = () => {
     const result = [];
 
-    for (let i = 0; i < data.length - candlesNumber; i++) {
+    for (let i = 0; i < data.length - candlesNumberForInitializeOB; i++) {
 
       // Проверяем, что текущая свеча зеленая
       if (isRedCandle(data[i])) {
         let isFollowedByRed = true;
 
         // Проверяем последующие n свечей
-        for (let j = 1; j <= candlesNumber; j++) {
+        for (let j = 1; j <= candlesNumberForInitializeOB; j++) {
           // Если хотя бы одна из следующих свечей не красная, то прерываем проверку
           if (isRedCandle(data[i + j]) || data[i + j].open === data[i + j].close) {
-          // if (isRedCandle(data[i + j])) {
+            // if (isRedCandle(data[i + j])) {
             isFollowedByRed = false;
             break;
           }

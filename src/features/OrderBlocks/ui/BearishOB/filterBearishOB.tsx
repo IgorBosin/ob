@@ -17,9 +17,9 @@ const FilterBearishOB = ({bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, bea
   const liquidityWithdrawal = useSelector(selectLiquidityWithdrawal)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(getBearishOB({bearOB: sortedOrderBlocks}))
-  }, [bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, data]);
+  // useEffect(() => {
+  //   dispatch(getBearishOB({bearOB: sortedOrderBlocks}))
+  // }, [bodyOrWickOutsideOB, outsideOrderBlockCandleIndex, data]);
 
   const sortOBBySomeNextCandleOutsideOB = (data: dataType[], orderBlockList: dataType[], outsideOrderBlockCandleIndex: number) => {
     if (!outsideOrderBlockCandleIndex) return orderBlockList

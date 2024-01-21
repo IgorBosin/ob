@@ -1,16 +1,22 @@
 import React, {useEffect} from 'react';
 import ShowCandles from "shared/ShowCandles/ShowCandles";
 import {useDispatch, useSelector} from "react-redux";
-import {selectAllOB, selectBearishOB, selectBullishOB} from "features/OrderBlocks/model/orderBlocks.selector";
+import {
+  selectAllOB,
+  selectBearishOB,
+  selectBullishOB,
+  selectCandlesNumberForInitializeOB
+} from "features/OrderBlocks/model/orderBlocks.selector";
 import {getAllOB} from "features/OrderBlocks/model/orderBlocks.slice";
 import {selectData} from "features/data/data.selector";
 import OpenTrade from "features/openTrade/OpenTrade";
 
 type Props = {
-  candlesNumber: number
+
 }
 
-const SummaryOB = ({candlesNumber}: Props) => {
+const SummaryOB = ({}: Props) => {
+  const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
   const data = useSelector(selectData)
   const allOB = useSelector(selectAllOB)
   const bearishOB = useSelector(selectBearishOB)
@@ -26,7 +32,7 @@ const SummaryOB = ({candlesNumber}: Props) => {
 
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
-      <OpenTrade orderBlocksIndexes={allOrderBlocksIndexes} candlesNumber={candlesNumber}/>
+      <OpenTrade orderBlocksIndexes={allOrderBlocksIndexes} candlesNumber={candlesNumberForInitializeOB}/>
       <div>
         <ul>all({allOB.length})</ul>
         <ShowCandles candles={allOB}/>
