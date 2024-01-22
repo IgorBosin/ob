@@ -4,14 +4,14 @@ import {dataType} from "shared/api/getKlines";
 import ClosingTrade from "features/closingTrade/ClosingTrade";
 import {selectData} from "features/data/data.selector";
 import {formattedDate} from "shared/Date/formattedDate";
-import {isGreenCandle, isRedCandle, getLengthCandle} from "utils/actions";
-import {selectFactorOB} from "features/OrderBlocks/model/orderBlocks.selector";
+import {getLengthCandle, isRedCandle} from "utils/actions";
+import {selectCandlesNumberForInitializeOB, selectFactorOB} from "features/OrderBlocks/model/orderBlocks.selector";
 
 type Props = {
   orderBlocksIndexes: number[]
-  candlesNumber: number
 }
-const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
+const OpenTrade = ({orderBlocksIndexes}: Props) => {
+  const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
   const data = useSelector(selectData)
   const factorOB = useSelector(selectFactorOB)
 
@@ -19,20 +19,20 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
     // if (isGreenCandle(candleOb)) {
     if (isRedCandle(candleOb)) {
       const a = candleOb.low + getLengthCandle(candleOb, factorOB)
-      return a > candleIter.low;
+      return a >= candleIter.low;
     } else {
       const a = candleOb.high - getLengthCandle(candleOb, factorOB)
-      return a < candleIter.high;
+      return a <= candleIter.high;
     }
   }
 
-  const enteringTrade = (data: dataType[], orderBlocksIndexes: number[], candlesNumber: number): {
+  const enteringTrade = (data: dataType[], orderBlocksIndexes: number[], candlesNumberForInitializeOB: number): {
     entering: number,
     orderBlock: number
   }[] => {
     const enteringCandleIndexes = [];
     for (const ob of orderBlocksIndexes) {
-      for (let i = ob + candlesNumber + 1; i < data.length; i++) {
+      for (let i = ob + candlesNumberForInitializeOB + 1; i < data.length; i++) {
         if (isValidEntry(data[ob], data[i])) {
           enteringCandleIndexes.push({
             entering: i,
@@ -45,7 +45,7 @@ const OpenTrade = ({orderBlocksIndexes, candlesNumber}: Props) => {
     return enteringCandleIndexes;
   }
 
-  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumber).sort((a, b) => a.entering - b.entering)
+  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumberForInitializeOB).sort((a, b) => a.entering - b.entering)
   const enteringTrade_ = (candles: dataType[], orderBlocks: dataType[], candlesNumber: number) => {
     const enteringLongTrades = []
 

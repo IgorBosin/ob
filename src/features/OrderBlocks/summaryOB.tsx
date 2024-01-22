@@ -28,7 +28,7 @@ const SummaryOB = () => {
 
   return (
     <div style={{display: 'flex', flexDirection: 'row'}}>
-      <OpenTrade orderBlocksIndexes={allOrderBlocksIndexes} candlesNumber={candlesNumberForInitializeOB}/>
+      <OpenTrade orderBlocksIndexes={allOrderBlocksIndexes}/>
       <div>
         <ul>all({allOB.length})</ul>
         <ShowCandles candles={allOB}/>

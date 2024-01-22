@@ -2,7 +2,6 @@ import {dataType, getKline} from "shared/api/getKlines";
 import {createSlice} from "@reduxjs/toolkit";
 import {isLoading, setAppError} from "app/app.slice";
 import axios from "axios";
-import {ErrorType} from "features/data/Data";
 import {createAppAsyncThunk} from "utils/create-app-async-thunk";
 
 const slice = createSlice({
@@ -37,7 +36,7 @@ export const fetchFirstData = createAppAsyncThunk<{
     }
   } catch (e) {
     if (axios.isAxiosError<ErrorType>(e)) {
-      const error = e.response ? e.response.data.messages[0].message : e.message
+      const error = e.response ? e.response.data.msg : e.message
       dispatch(setAppError({error: error}));
       return rejectWithValue(null);
     }
@@ -53,4 +52,9 @@ type FetchDataArgs = {
   symbols: string
   timeFrame: string
   initialTime: number | null
+}
+
+export type ErrorType = {
+  code: number
+  msg: string
 }

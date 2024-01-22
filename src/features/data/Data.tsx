@@ -72,13 +72,4 @@ export type TimeFrameType =
   | '1w'
   | '1mo';
 
-export type ErrorType = {
-  statusCode: number,
-  messages: [
-    {
-      message: string
-      field: string
-    }
-  ],
-  error: string
-}
+
