@@ -28,7 +28,8 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
 
   const enteringTrade = (data: dataType[], orderBlocksIndexes: number[], candlesNumberForInitializeOB: number): {
     entering: number,
-    orderBlock: number
+    orderBlock: number,
+    fee: number
   }[] => {
     const enteringCandleIndexes = [];
     for (const ob of orderBlocksIndexes) {
@@ -36,7 +37,8 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
         if (isValidEntry(data[ob], data[i])) {
           enteringCandleIndexes.push({
             entering: i,
-            orderBlock: ob
+            orderBlock: ob,
+            fee: 1000 / ((data[ob].high - data[ob].low) / data[ob].low * 100) * 0.00063
           });
           break;
         }
@@ -45,7 +47,7 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
     return enteringCandleIndexes;
   }
 
-  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumberForInitializeOB).sort((a, b) => a.entering - b.entering)
+  const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumberForInitializeOB).sort((a, b) => a.orderBlock - b.orderBlock)
   const enteringTrade_ = (candles: dataType[], orderBlocks: dataType[], candlesNumber: number) => {
     const enteringLongTrades = []
 
@@ -71,15 +73,18 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
   }
 
   console.log('перерисован компонент OpenTrade')
-
   return (
     <div style={{display: "flex"}}>
       <ClosingTrade enteringCandleIndexes={enteringCandleIndexes} orderBlocksIndexes={orderBlocksIndexes}/>
+      {enteringCandleIndexes.reduce((acc, el) => {
+        return acc + el.fee
+      }, 0)}
       <div>
         {enteringCandleIndexes.map(el =>
           <li key={el.entering}>
             {formattedDate(data[el.orderBlock].openTime)} - {formattedDate(data[el.entering].openTime)}
-          </li>)}
+          </li>
+        )}
       </div>
     </div>
   );
