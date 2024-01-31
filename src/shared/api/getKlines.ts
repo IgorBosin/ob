@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function getKline(pair: string, interval: string, startTime: number, limit = 1000) {
+export async function getKline(pair: string, interval: string, startTime: number | null, limit = 1000) {
   const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${pair}&interval=${interval}&limit=${limit}&startTime=${startTime}`;
   const data = await axios.get<BaseResponseType[]>(url);
 

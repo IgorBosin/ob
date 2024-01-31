@@ -1,23 +1,22 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import Dropdown from "shared/Dropdown/Dropdown";
 import {clearData, fetchFirstData} from "features/data/data.slice";
-import DateComponent from "shared/Date/DateComponent";
 import {Button} from "@mui/material";
-import {importantDates} from "shared/Date/generalDates";
 import {formattedDate} from "shared/Date/formattedDate";
 import Input from "shared/Input/Input";
 import {selectData} from "features/data/data.selector";
 
 
-const Data: FC = () => {
+type Props = {
+  symbols: string
+  timeFrame: string
+  initialTime: number | null
+  setSymbols: (symbols: string) => void
+}
+const Data = ({symbols, timeFrame, setSymbols, initialTime}: Props) => {
   const dispatch = useDispatch()
-  const [initialTime, setInitialTime] = useState<number | null>(importantDates.september27year23);
   const data = useSelector(selectData)
 
-  const optionsTimeFrame: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
-  const [timeFrame, setTimeFrame] = useState('30m');
-  const [symbols, setSymbols] = useState('BTC')
 
   useEffect(() => {
     if (data.length) {
@@ -36,8 +35,6 @@ const Data: FC = () => {
 
   return (
     <div style={{display: 'flex', alignItems: 'center'}}>
-      <DateComponent time={initialTime} setTime={setInitialTime}/>
-      <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame} setSelectedOption={setTimeFrame}/>
       <Input margin={"none"} type={"text"} label={'монета'}
              onChange={(e) => {
                setSymbols(e.currentTarget.value)
@@ -55,21 +52,5 @@ const Data: FC = () => {
 
 export default Data;
 
-export type TimeFrameType =
-  '1m'
-  | '3m'
-  | '5m'
-  | '15m'
-  | '30m'
-  | '1h'
-  | '2h'
-  | '4h'
-  | '6h'
-  | '8h'
-  | '12h'
-  | '1d'
-  | '3d'
-  | '1w'
-  | '1mo';
 
 

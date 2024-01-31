@@ -19,6 +19,9 @@ import {
   selectCurrentCandleMustBeOutsideOB,
   selectFactorOB
 } from "features/OrderBlocks/model/orderBlocks.selector";
+import CoinSelection from "features/coinSelection/CoinSelection";
+import DateComponent from "shared/Date/DateComponent";
+import {importantDates} from "shared/Date/generalDates";
 
 const App = () => {
 
@@ -28,6 +31,11 @@ const App = () => {
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
   const optionsBodyOrWickOutsideOB = ['wick', 'body'];
   const [bodyOrWickOutsideOB, setBodyOrWickOutsideOB] = useState('body');
+
+  const [initialTime, setInitialTime] = useState<number | null>(importantDates.december01year23);
+  const optionsTimeFrame: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
+  const [timeFrame, setTimeFrame] = useState('30m');
+  const [symbols, setSymbols] = useState('BTC')
 
   useEffect(() => {
     dispatch(changeBodyOrWickOutsideOB({bodyOrWickOutsideOB: bodyOrWickOutsideOB}))
@@ -47,6 +55,9 @@ const App = () => {
   console.log('Компонент App перерисован')
   return (
     <div>
+      <CoinSelection initialTime={initialTime} timeFrame={timeFrame} />
+      <DateComponent time={initialTime} setTime={setInitialTime}/>
+      <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame} setSelectedOption={setTimeFrame}/>
       <div style={{display: 'flex'}}>
         <Input placeholder={factorOB.toString()}
                label={'Расширение ОБ'}
@@ -62,7 +73,7 @@ const App = () => {
                   selectedOption={bodyOrWickOutsideOB}
                   setSelectedOption={setBodyOrWickOutsideOB}/>
       </div>
-      <Data/>
+      <Data initialTime={initialTime} timeFrame={timeFrame} setSymbols={setSymbols} symbols={symbols}/>
       <ErrorSnackbar/>
       <FindBearishOB/>
       <FindBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
@@ -73,3 +84,20 @@ const App = () => {
 };
 
 export default App;
+
+export type TimeFrameType =
+  '1m'
+  | '3m'
+  | '5m'
+  | '15m'
+  | '30m'
+  | '1h'
+  | '2h'
+  | '4h'
+  | '6h'
+  | '8h'
+  | '12h'
+  | '1d'
+  | '3d'
+  | '1w'
+  | '1mo';

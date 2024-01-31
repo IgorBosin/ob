@@ -99,39 +99,25 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 
   const arrEarn = res.tradesInRow.date.map(el => <li>{formattedDate(el)}</li>)
 
-  function findMostFrequentNumber(arr: number[]) {
-    let currentNumber = arr[0];
-    let currentCount = 1;
+  function maxConsecutiveZeros(arr:number[]) {
+    let maxZeros = 0;
+    let currentZeros = 0;
 
-    let maxNumber = arr[0];
-    let maxCount = 1;
-
-    for (let i = 1; i < arr.length; i++) {
-      if (arr[i] === currentNumber) {
-        currentCount++;
+    for (let num of arr) {
+      if (num === 0) {
+        currentZeros++;
+        maxZeros = Math.max(maxZeros, currentZeros);
       } else {
-        if (currentCount > maxCount) {
-          maxNumber = currentNumber;
-          maxCount = currentCount;
-        }
-
-        currentNumber = arr[i];
-        currentCount = 1;
+        currentZeros = 0;
       }
     }
 
-    if (currentCount > maxCount) {
-      maxNumber = currentNumber;
-      maxCount = currentCount;
-    }
-
-    console.log(`Число ${maxNumber} повторяется чаще всего, а именно ${maxCount} раз(а).`);
-    return maxCount
+    return maxZeros;
   }
 
   const expectancy = (resInfo * ratio / 100) - (1 - resInfo / 100)
 
-  const numberOfLostTradesInRow = findMostFrequentNumber(res.tradesInRow.point)
+  const numberOfLostTradesInRow = maxConsecutiveZeros(res.tradesInRow.point)
 
   console.log('перерисован компонент CloseTrade')
   return (
@@ -172,6 +158,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 export default ClosingTrade;
 
 export type TradeEntryAndOrderBlockIndexes = {
-  entering: number,
+  entering: number
   orderBlock: number
+  fee: number
 }
