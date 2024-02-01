@@ -33,11 +33,12 @@ const Data = ({symbols, timeFrame, setSymbols, initialTime}: Props) => {
     dispatch(fetchFirstData({symbols, timeFrame, initialTime}))
   }
 
+  console.log('компонент Data перерисован')
   return (
     <div style={{display: 'flex', alignItems: 'center'}}>
       <Input margin={"none"} type={"text"} label={'монета'}
              onChange={(e) => {
-               setSymbols(e.currentTarget.value)
+               setSymbols(e.currentTarget.value.toUpperCase())
              }}
              placeholder={symbols}/>
       <Button onClick={onClickFetchData}
