@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {dataType} from "shared/api/getKlines";
+import {clearData} from "features/data/data.slice";
 
 const slice = createSlice({
   name: 'ob',
@@ -38,6 +39,13 @@ const slice = createSlice({
     changeCurrentCandleMustBeOutsideOB: (state, action: PayloadAction<{ currentCandleMustBeOutsideOB: number }>) => {
       state.currentCandleMustBeOutsideOB = action.payload.currentCandleMustBeOutsideOB
     },
+  }, extraReducers: (builder) => {
+    builder
+      .addCase(clearData, (state, action) => {
+        state.allOB = []
+        state.bearishOB = []
+        state.bullishOB = []
+      })
   }
 })
 
