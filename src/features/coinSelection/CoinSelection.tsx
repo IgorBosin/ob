@@ -22,19 +22,24 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
   });
   const dispatch = useDispatch();
 
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   const iterCoin = async () => {
     setLoading(true);
     try {
-      setLoading(false);
-      const data: SummaryInfo[] = [];
+      //------ДЛЯ ПАРАЛЛЕЛЬНОГО ЗАПРОСА---------------
+      // const coinPromises = coins.map((coin) => getCoinInfo(coin, timeFrame, initialTime));
+      // const data: SummaryInfo[] = await Promise.all(coinPromises);
+      //--------------------------------------------------
 
+      setLoading(false);
+
+      //------ДЛЯ ПОСЛЕДОВАТЕЛЬНОГО ЗАПРОСА---------------
+      const data: SummaryInfo[] = [];
       for (const coin of coins) {
         const info = await getCoinInfo(coin, timeFrame, initialTime);
         data.push(info);
-        // await delay(50);  // Добавляем задержку в 50 миллисекунд между вызовами
       }
+      //--------------------------------------------------
 
       // Сохраняем данные для отображения в состоянии
       setTableData(data);
