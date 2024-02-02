@@ -21,8 +21,8 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
   const isFilterOBByLiquidityWithdrawal = false
   const factorOB = 1
   const candlesNumberForInitializeOB = 5
-  const isShowOnlyRed = true
-  const isShowOnlyGreen = true
+  const isShowOnlyBearOB = true
+  const isShowOnlyBullOB = true
   const ratio = 2 // выбор небоходимого соотношения риск\прибыль
   const data: dataType[] = []
   const firstData: dataType[] = await getKline(`${coin}USDT`, timeFrame, initialTime);
@@ -132,12 +132,13 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
         }
       }
     }
-    enteringCandleIndexes.sort((a, b) => a.entering - b.entering).forEach(el => {
-      console.log(formattedDate(data[el.entering].openTime))
-    })
+    // enteringCandleIndexes.sort((a, b) => a.entering - b.entering).forEach(el => {
+    //   console.log(formattedDate(data[el.entering].openTime))
+    // })
     return enteringCandleIndexes;
   }
   const enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[] = enteringTrade()
+
   const closingLongTrade = () => {
     let obj = {
       win: 0,
@@ -153,7 +154,7 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
       const profitForBullishOB = lengthCandle + data[enterCandle.orderBlock].low + getLengthCandle(data[enterCandle.orderBlock], factorOB)
       const profitForBearishOB = data[enterCandle.orderBlock].high - getLengthCandle(data[enterCandle.orderBlock], factorOB) - lengthCandle
 
-      if (isShowOnlyGreen) {
+      if (isShowOnlyBullOB) {
         // бычий ОБ (свеча красная)
         if (isRedCandle(data[enterCandle.orderBlock])) {
           for (let i = enterCandle.entering; i < data.length; i++) {
@@ -176,7 +177,7 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
         }
       }
 
-      if (isShowOnlyRed) {
+      if (isShowOnlyBearOB) {
         // медвежий ОБ (свеча зеленая)
         if (isGreenCandle(data[enterCandle.orderBlock])) {
           for (let i = enterCandle.entering; i < data.length; i++) {
@@ -187,7 +188,7 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
             }
             if (data[i].low < profitForBearishOB) {
               // индекс ентеринг свечи равен индексу текущей свечи и эта свеча не закрылась выше ТП, то continue
-              if (i === enterCandle.entering && data[i].close < profitForBearishOB) {
+              if (i === enterCandle.entering && data[i].close > profitForBearishOB) {
                 continue
               }
               obj.tradesInRow.point.push(1)
@@ -222,23 +223,37 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
     return maxZeros;
   }
 
-  const numberOfLostTradesInRow = maxConsecutiveZeros(closeTrades.tradesInRow.point)
+  function findNotEnteringOrderBlocksIndexes(enteringTrades: TradeEntryAndOrderBlockIndexes[], orderBlocksIndexes: number[]): number[] {
+    const result: number[] = [];
 
-  // {enteringCandleIndexes.reduce((acc, el) => {
-  //   return acc + el.fee
-  // }, 0)}
+    const enteringOrderBlocks = enteringTrades.map(el => el.orderBlock)
+    for (const orderBlockIndex of orderBlocksIndexes) {
+      if (enteringOrderBlocks.includes(orderBlockIndex)) {
+        continue
+      }
+      result.push(orderBlockIndex)
+    }
+    return result;
+  }
+
+  const notEnteringOrderBlocksIndexes = findNotEnteringOrderBlocksIndexes(enteringCandleIndexes, orderBlocksIndexes)
+
+  notEnteringOrderBlocksIndexes.forEach(el => {
+    console.log(formattedDate(data[el].openTime))
+  })
+
+  const numberOfLostTradesInRow = maxConsecutiveZeros(closeTrades.tradesInRow.point)
 
   summaryInfo.coin = coin
   summaryInfo.allEnteringTrades = enteringCandleIndexes.length
   summaryInfo.win = closeTrades.win
   summaryInfo.lose = closeTrades.lose
   summaryInfo.earnPoints = closeTrades.win * ratio - closeTrades.lose
-  const persentWinningTrades = closeTrades.win / (closeTrades.win + closeTrades.lose) * 100
+  const percentWinningTrades = closeTrades.win / (closeTrades.win + closeTrades.lose) * 100
   summaryInfo.persentWinningTrades = +(closeTrades.win / (closeTrades.win + closeTrades.lose) * 100).toFixed(2)
   summaryInfo.maxLostTradesInRow = numberOfLostTradesInRow
-  summaryInfo.strategyAssessment = +((persentWinningTrades * ratio / 100) - (1 - persentWinningTrades / 100)).toFixed(2)
+  summaryInfo.strategyAssessment = +((percentWinningTrades * ratio / 100) - (1 - percentWinningTrades / 100)).toFixed(2)
   summaryInfo.fee = +(enteringCandleIndexes.reduce((acc, el) => acc + el.fee, 0)).toFixed(2)
-  debugger
   summaryInfo.total = +((closeTrades.win * ratio - closeTrades.lose) * 10 - (enteringCandleIndexes.reduce((acc, el) => acc + el.fee, 0))).toFixed(2)
   summaryInfo.openTime = data[0].openTime
   summaryInfo.closeTime = data[data.length - 1].closeTime

@@ -17,14 +17,14 @@ type Props = {
 const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   const data = useSelector(selectData)
   const [ratio, setRatio] = useState(2) // выбор небоходимого соотношения риск\прибыль
-  const [isShowOnlyRed, setIsShowOnlyRed] = useState(true)
-  const [isShowOnlyGreen, setIsShowOnlyGreen] = useState(true)
+  const [isShowOnlyBearOB, setIsShowOnlyBearOB] = useState(true)
+  const [isShowOnlyBullOB, setIsShowOnlyBullOB] = useState(true)
   const factorOB = useSelector(selectFactorOB)
   const liquidityWithdrawal = useSelector(selectLiquidityWithdrawal)
   const dispatch = useDispatch()
 
 
-  const closingLongTrade = (candles: dataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
+  const closingTrade = (candles: dataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
     let obj = {
       win: 0,
       lose: 0,
@@ -39,10 +39,8 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
       const lengthCandle = getLengthCandle(candles[enterCandle.orderBlock], factorOB) * ratio
       const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].low + getLengthCandle(candles[enterCandle.orderBlock], factorOB)
       const profitForBearishOB = candles[enterCandle.orderBlock].high - getLengthCandle(candles[enterCandle.orderBlock], factorOB) - lengthCandle
-      const a = candles[enterCandle.orderBlock].low
-      // const profitForBearishOB = candles[enterCandle.orderBlock].low - lengthCandle
 
-      if (isShowOnlyGreen) {
+      if (isShowOnlyBullOB) {
         // бычий ОБ (свеча красная)
         if (isRedCandle(candles[enterCandle.orderBlock])) {
           for (let i = enterCandle.entering; i < candles.length; i++) {
@@ -65,7 +63,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
         }
       }
 
-      if (isShowOnlyRed) {
+      if (isShowOnlyBearOB) {
         // медвежий ОБ (свеча зеленая)
         if (isGreenCandle(candles[enterCandle.orderBlock])) {
           for (let i = enterCandle.entering; i < candles.length; i++) {
@@ -75,8 +73,8 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
               break
             }
             if (candles[i].low < profitForBearishOB) {
-              // индекс ентеринг свечи равен индексу текущей свечи и эта свеча не закрылась выше ТП, то continue
-              if (i === enterCandle.entering && candles[i].close < profitForBearishOB) {
+              // индекс ентеринг свечи равен индексу текущей свечи и эта свеча не закрылась ниже ТП, то continue
+              if (i === enterCandle.entering && candles[i].close > profitForBearishOB) {
                 continue
               }
               obj.tradesInRow.point.push(1)
@@ -91,7 +89,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
     return obj
   }
 
-  const res = closingLongTrade(data, enteringCandleIndexes)
+  const res = closingTrade(data, enteringCandleIndexes)
 
   const earn = (res.win * ratio - res.lose)
 
@@ -123,12 +121,12 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   return (
     <div>
       <FormControlLabel
-        control={<Checkbox checked={isShowOnlyRed} onChange={() => setIsShowOnlyRed(!isShowOnlyRed)}/>}
+        control={<Checkbox checked={isShowOnlyBearOB} onChange={() => setIsShowOnlyBearOB(!isShowOnlyBearOB)}/>}
         label="Red OB"
         labelPlacement="bottom"
       />
       <FormControlLabel
-        control={<Checkbox checked={isShowOnlyGreen} onChange={() => setIsShowOnlyGreen(!isShowOnlyGreen)}/>}
+        control={<Checkbox checked={isShowOnlyBullOB} onChange={() => setIsShowOnlyBullOB(!isShowOnlyBullOB)}/>}
         label="Green OB"
         labelPlacement="bottom"
       />
