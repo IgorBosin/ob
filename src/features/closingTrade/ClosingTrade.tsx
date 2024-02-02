@@ -8,6 +8,7 @@ import {selectData} from "features/data/data.selector";
 import {selectFactorOB, selectLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.selector";
 import {Checkbox, FormControlLabel} from "@mui/material";
 import {setLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.slice";
+import {showMaxZeroInRow} from "features/closingTrade/actions";
 
 type Props = {
   enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
@@ -97,25 +98,9 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 
   const arrEarn = res.tradesInRow.date.map(el => <li>{formattedDate(el)}</li>)
 
-  function maxConsecutiveZeros(arr:number[]) {
-    let maxZeros = 0;
-    let currentZeros = 0;
-
-    for (let num of arr) {
-      if (num === 0) {
-        currentZeros++;
-        maxZeros = Math.max(maxZeros, currentZeros);
-      } else {
-        currentZeros = 0;
-      }
-    }
-
-    return maxZeros;
-  }
-
   const expectancy = (resInfo * ratio / 100) - (1 - resInfo / 100)
 
-  const numberOfLostTradesInRow = maxConsecutiveZeros(res.tradesInRow.point)
+  const maxZeroInRow = showMaxZeroInRow(res.tradesInRow.point)
 
   console.log('перерисован компонент CloseTrade')
   return (
@@ -143,7 +128,7 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
         <ul>LOSE: {res.lose}  </ul>
         <ul>сколько заработал единиц риска: {earn}</ul>
         <ul>какой % прибыльных сделок: {resInfo}</ul>
-        <ul>максимально возможное количество проигранных сделок подряд: {numberOfLostTradesInRow}</ul>
+        <ul>максимально возможное количество проигранных сделок подряд: {maxZeroInRow}</ul>
         <ul>насколько стратегия выигрышная: {expectancy.toFixed(3)} </ul>
         <ul>ОБ где на свече входа получился ТП: {arrEarn}</ul>
       </div>

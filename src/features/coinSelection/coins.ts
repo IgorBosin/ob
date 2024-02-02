@@ -1,16 +1,21 @@
-export const coins = [
-  "CELR",
-  "CTSI",
-  "DYDX",
-  "FTM",
-  "ALGO",
-  "BAKE",
-  "LRC",
-  "ATOM",
-  "DENT",
-  "ZRX",
-]
 export const coins_ = [
+  'MTL', 'APE', 'ARB', 'ATOM', 'HOT', 'CELR', 'AI', 'GTC', 'CYBER', 'XVG'
+];
+
+export const coins__ = [
+  '1000SHIB', '1000XEC', '1INCH', 'AAVE', 'ADA', 'ALGO', 'ALICE', 'ALPHA', 'ANKR', 'ANT',
+  'ARPA', 'AR', 'ATA', 'ATOM', 'AUDIO', 'AVAX', 'AXS', 'BAKE', 'BAL', 'BAND', 'BAT', 'BCH',
+  'BEL', 'BLZ', 'BNB', 'BTCDOM', 'BTC', 'C98', 'CELO', 'CELR', 'CHR', 'CHZ', 'COMP', 'COTI',
+  'CRV', 'CTK', 'CTSI', 'DASH', 'DEFI', 'DENT', 'DGB', 'DOGE', 'DOT', 'DYDX', 'EGLD', 'ENJ',
+  'ENS', 'EOS', 'ETC', 'ETH', 'FIL', 'FLM', 'FTM', 'GALA', 'GRT', 'GTC', 'HBAR', 'HOT', 'ICX',
+  'IOST', 'IOTA', 'IOTX', 'KAVA', 'KLAY', 'KNC', 'KSM', 'LINA', 'LINK', 'LIT', 'LPT', 'LRC',
+  'LTC', 'MANA', 'MASK', 'MATIC', 'MKR', 'MTL', 'NEAR', 'NEO', 'NKN', 'OCEAN', 'OGN', 'OMG',
+  'ONE', 'ONT', 'PEOPLE', 'QTUM', 'REEF', 'REN', 'RLC', 'ROSE', 'RSR', 'RUNE', 'RVN', 'SAND',
+  'SFP', 'SKL', 'SNX', 'SOL', 'STMX', 'STORJ', 'SUSHI', 'SXP', 'THETA', 'TRB', 'TRX', 'UNFI',
+  'UNI', 'VET', 'WAVES', 'XEM', 'XLM', 'XMR', 'XRP', 'XTZ', 'YFI', 'ZEC', 'ZEN', 'ZIL', 'ZRX'
+]; // все монеты с 01.01.2022
+
+export const coins = [
   '1000BONK',
   '1000FLOKI',
   '1000LUNC',
@@ -66,7 +71,6 @@ export const coins_ = [
   'BNX',
   'BOND',
   'BSV',
-  'BTCDOM',
   'BTC',
   'C98',
   'CAKE',
@@ -237,7 +241,6 @@ export const coins_ = [
   'UMA',
   'UNFI',
   'UNI',
-  'USDC',
   'USTC',
   'VET',
   'WAVES',
