@@ -12,7 +12,8 @@ const slice = createSlice({
     liquidityWithdrawal: false,
     candlesNumberForInitializeOB: 5,
     currentCandleMustBeOutsideOB: 0,
-    bodyOrWickOutsideOB: 'body'
+    bodyOrWickOutsideOB: 'body',
+    fee: 0
   },
   reducers: {
     getAllOB: (state, action: PayloadAction<{ allOB: dataType[] }>) => {
@@ -39,6 +40,9 @@ const slice = createSlice({
     changeCurrentCandleMustBeOutsideOB: (state, action: PayloadAction<{ currentCandleMustBeOutsideOB: number }>) => {
       state.currentCandleMustBeOutsideOB = action.payload.currentCandleMustBeOutsideOB
     },
+    getFee: (state, action: PayloadAction<{ fee: number }>) => {
+      state.fee = action.payload.fee
+    }
   }, extraReducers: (builder) => {
     builder
       .addCase(clearData, (state, action) => {
@@ -58,5 +62,6 @@ export const {
   setLiquidityWithdrawal,
   setCandlesNumberForInitializeOB,
   changeCurrentCandleMustBeOutsideOB,
-  changeBodyOrWickOutsideOB
+  changeBodyOrWickOutsideOB,
+  getFee,
 } = slice.actions

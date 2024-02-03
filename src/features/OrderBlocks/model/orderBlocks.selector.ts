@@ -10,4 +10,5 @@ export const selectLiquidityWithdrawal = (state: AppRootStateType): boolean => s
 export const selectCandlesNumberForInitializeOB = (state: AppRootStateType): number => state.orderBlocks.candlesNumberForInitializeOB
 export const selectBodyOrWickOutsideOB = (state: AppRootStateType): string => state.orderBlocks.bodyOrWickOutsideOB
 export const selectCurrentCandleMustBeOutsideOB = (state: AppRootStateType): number => state.orderBlocks.currentCandleMustBeOutsideOB
+export const selectFee = (state: AppRootStateType): number => state.orderBlocks.fee
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import {useSelector} from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import {dataType} from "shared/api/getKlines";
 import ClosingTrade, {TradeEntryAndOrderBlockIndexes} from "features/closingTrade/ClosingTrade";
 import {selectData} from "features/data/data.selector";
@@ -7,14 +7,18 @@ import {formattedDate} from "shared/Date/formattedDate";
 import {getLengthCandle, isGreenCandle, isRedCandle} from "utils/actions";
 import {selectCandlesNumberForInitializeOB, selectFactorOB} from "features/OrderBlocks/model/orderBlocks.selector";
 import NotEnteringOrderBlocks from "features/notEnteringOrderBlocks/notEnteringOrderBlocks";
+import {getFee} from "features/OrderBlocks/model/orderBlocks.slice";
 
 type Props = {
   orderBlocksIndexes: number[]
 }
 const OpenTrade = ({orderBlocksIndexes}: Props) => {
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
+  const [showTimeOBAndTimeEntering, setShowTimeOBAndTimeEntering] = useState<any>(<li></li>)
   const data = useSelector(selectData)
   const factorOB = useSelector(selectFactorOB)
+  const dispatch = useDispatch()
+
 
   const isValidEntry = (candleOb: dataType, candleIter: dataType) => {
     if (isRedCandle(candleOb)) {
@@ -45,6 +49,21 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
 
   const enteringCandleIndexes = enteringTrade(data, orderBlocksIndexes, candlesNumberForInitializeOB).sort((a, b) => a.orderBlock - b.orderBlock)
 
+
+  useEffect(() => {
+    const fee = enteringCandleIndexes.reduce((acc, el) => {
+      return acc + el.fee
+    }, 0)
+    dispatch(getFee({fee}))
+
+    const showTime = enteringCandleIndexes.map(el =>
+      <li key={el.entering}>
+        {formattedDate(data[el.orderBlock].openTime)} - {formattedDate(data[el.entering].openTime)}
+      </li>
+    )
+    setShowTimeOBAndTimeEntering(showTime)
+  }, [enteringCandleIndexes]);
+
   const enteringTrade_ = (candles: dataType[], orderBlocks: dataType[], candlesNumber: number) => {
     const enteringLongTrades = []
 
@@ -69,20 +88,14 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
     return enteringLongTrades
   }
 
+
   console.log('перерисован компонент OpenTrade')
   return (
     <div style={{display: "flex"}}>
       <ClosingTrade enteringCandleIndexes={enteringCandleIndexes} orderBlocksIndexes={orderBlocksIndexes}/>
       <NotEnteringOrderBlocks enteringCandleIndexes={enteringCandleIndexes} orderBlocksIndexes={orderBlocksIndexes}/>
-      {enteringCandleIndexes.reduce((acc, el) => {
-        return acc + el.fee
-      }, 0)}
       <div>
-        {enteringCandleIndexes.map(el =>
-          <li key={el.entering}>
-            {formattedDate(data[el.orderBlock].openTime)} - {formattedDate(data[el.entering].openTime)}
-          </li>
-        )}
+        {showTimeOBAndTimeEntering}
       </div>
     </div>
   );

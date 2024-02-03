@@ -31,6 +31,7 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
   const data: dataType[] = []
   const firstData: dataType[] = await getKline(`${coin}USDT`, timeFrame, initialTime);
   data.push(...firstData)
+
   // for (let i = 0; i < 3; i++) {
   //   const secondData: dataType[] = await getKline(`${coin}USDT`, timeFrame, data[data.length - 1].closeTime);
   //   data.push(...secondData)
@@ -38,6 +39,7 @@ export const getCoinInfo = async (coin: string, timeFrame: string, initialTime: 
   //     break
   //   }
   // }
+
   // while (true) {
   //   const secondData: dataType[] = await getKline(`${coin}USDT`, timeFrame, data[data.length - 1].closeTime);
   //   data.push(...secondData)

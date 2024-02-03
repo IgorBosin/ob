@@ -1,8 +1,4 @@
-export const coins_ = [
-  'MTL', 'APE', 'ARB', 'ATOM', 'HOT', 'CELR', 'AI', 'GTC', 'CYBER', 'XVG'
-];
-
-export const coins__ = [
+export const coins010122 = [
   '1000SHIB', '1000XEC', '1INCH', 'AAVE', 'ADA', 'ALGO', 'ALICE', 'ALPHA', 'ANKR', 'ANT',
   'ARPA', 'AR', 'ATA', 'ATOM', 'AUDIO', 'AVAX', 'AXS', 'BAKE', 'BAL', 'BAND', 'BAT', 'BCH',
   'BEL', 'BLZ', 'BNB', 'BTCDOM', 'BTC', 'C98', 'CELO', 'CELR', 'CHR', 'CHZ', 'COMP', 'COTI',
@@ -15,7 +11,7 @@ export const coins__ = [
   'UNI', 'VET', 'WAVES', 'XEM', 'XLM', 'XMR', 'XRP', 'XTZ', 'YFI', 'ZEC', 'ZEN', 'ZIL', 'ZRX'
 ]; // все монеты с 01.01.2022
 
-export const coins = [
+export const coinsAll = [
   '1000BONK',
   '1000FLOKI',
   '1000LUNC',
@@ -261,4 +257,11 @@ export const coins = [
   'ZEC',
   'ZEN',
   'ZIL',
-  'ZRX',]
+  'ZRX',] // все монеты
+
+const middleIndex = Math.ceil(coinsAll.length / 2);
+
+export const coins__ = coinsAll.slice(0, middleIndex);
+export const coins_ = coinsAll.slice(middleIndex);
+
+export const coins = coinsAll

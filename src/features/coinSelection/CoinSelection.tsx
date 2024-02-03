@@ -27,18 +27,18 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
     setLoading(true);
     try {
       //------ДЛЯ ПАРАЛЛЕЛЬНОГО ЗАПРОСА---------------
-      // const coinPromises = coins.map((coin) => getCoinInfo(coin, timeFrame, initialTime));
-      // const data: SummaryInfo[] = await Promise.all(coinPromises);
+      const coinPromises = coins.map((coin) => getCoinInfo(coin, timeFrame, initialTime));
+      const data: SummaryInfo[] = await Promise.all(coinPromises);
       //--------------------------------------------------
 
       setLoading(false);
 
       //------ДЛЯ ПОСЛЕДОВАТЕЛЬНОГО ЗАПРОСА---------------
-      const data: SummaryInfo[] = [];
-      for (const coin of coins) {
-        const info = await getCoinInfo(coin, timeFrame, initialTime);
-        data.push(info);
-      }
+      // const data: SummaryInfo[] = [];
+      // for (const coin of coins) {
+      //   const info = await getCoinInfo(coin, timeFrame, initialTime);
+      //   data.push(info);
+      // }
       //--------------------------------------------------
 
       // Сохраняем данные для отображения в состоянии
