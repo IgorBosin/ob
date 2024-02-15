@@ -1,35 +1,32 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {dataType} from "shared/api/getKlines";
+import {DataType} from "shared/api/getKlines";
 import {clearData} from "features/data/data.slice";
 
 const slice = createSlice({
   name: 'ob',
   initialState: {
-    allOB: [] as dataType[],
-    bearishOB: [] as dataType[],
-    bullishOB: [] as dataType[],
+    allOB: [] as DataType[],
+    bearishOB: [] as DataType[],
+    bullishOB: [] as DataType[],
     factorOB: 1,
-    liquidityWithdrawal: false,
     candlesNumberForInitializeOB: 5,
     currentCandleMustBeOutsideOB: 0,
     bodyOrWickOutsideOB: 'body',
-    fee: 0
+    fee: 0,
+    prevNumberCandleForLiquidityWithdrawal: 5
   },
   reducers: {
-    getAllOB: (state, action: PayloadAction<{ allOB: dataType[] }>) => {
+    getAllOB: (state, action: PayloadAction<{ allOB: DataType[] }>) => {
       state.allOB = action.payload.allOB
     },
-    getBearishOB: (state, action: PayloadAction<{ bearOB: dataType[] }>) => {
+    getBearishOB: (state, action: PayloadAction<{ bearOB: DataType[] }>) => {
       state.bearishOB = action.payload.bearOB
     },
-    getBullishOB: (state, action: PayloadAction<{ bullOB: dataType[] }>) => {
+    getBullishOB: (state, action: PayloadAction<{ bullOB: DataType[] }>) => {
       state.bullishOB = action.payload.bullOB
     },
     changeFactorOB: (state, action: PayloadAction<{ factor: number }>) => {
       state.factorOB = action.payload.factor
-    },
-    setLiquidityWithdrawal: (state, action: PayloadAction<{ liquidityWithdrawal: boolean }>) => {
-      state.liquidityWithdrawal = action.payload.liquidityWithdrawal
     },
     setCandlesNumberForInitializeOB: (state, action: PayloadAction<{ candlesNumberForInitializeOB: number }>) => {
       state.candlesNumberForInitializeOB = action.payload.candlesNumberForInitializeOB
@@ -42,6 +39,11 @@ const slice = createSlice({
     },
     getFee: (state, action: PayloadAction<{ fee: number }>) => {
       state.fee = action.payload.fee
+    },
+    changePrevNumberCandleForLiquidityWithdrawal: (state, action: PayloadAction<{
+      prevNumberCandleForLiquidityWithdrawal: number
+    }>) => {
+      state.prevNumberCandleForLiquidityWithdrawal = action.payload.prevNumberCandleForLiquidityWithdrawal
     }
   }, extraReducers: (builder) => {
     builder
@@ -59,9 +61,9 @@ export const {
   getBullishOB,
   getAllOB,
   changeFactorOB,
-  setLiquidityWithdrawal,
   setCandlesNumberForInitializeOB,
   changeCurrentCandleMustBeOutsideOB,
   changeBodyOrWickOutsideOB,
   getFee,
+  changePrevNumberCandleForLiquidityWithdrawal,
 } = slice.actions

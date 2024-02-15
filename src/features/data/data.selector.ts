@@ -1,4 +1,4 @@
 import {AppRootStateType} from "app/store";
-import {dataType} from "shared/api/getKlines";
+import {DataType} from "shared/api/getKlines";
 
-export const selectData = (state: AppRootStateType): dataType[] => state.data.data
+export const selectData = (state: AppRootStateType): DataType[] => state.data.data

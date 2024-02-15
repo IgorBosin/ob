@@ -3,25 +3,25 @@ import './App.css';
 import {ErrorSnackbar} from "shared/ErrorSnackbar/ErrorSnackbar";
 import Data from "features/data/Data";
 import Input from "shared/Input/Input";
-import FindBearishOB from "features/OrderBlocks/ui/BearishOB/findBearishOB";
-import FindBullishOB from "features/OrderBlocks/ui/BullishOB/findBullishOB";
 import Dropdown from "shared/Dropdown/Dropdown";
-import SummaryOB from "features/OrderBlocks/summaryOB";
 import {useDispatch, useSelector} from "react-redux";
 import {
   changeBodyOrWickOutsideOB,
   changeCurrentCandleMustBeOutsideOB,
   changeFactorOB,
+  changePrevNumberCandleForLiquidityWithdrawal,
   setCandlesNumberForInitializeOB
 } from "features/OrderBlocks/model/orderBlocks.slice";
 import {
   selectCandlesNumberForInitializeOB,
   selectCurrentCandleMustBeOutsideOB,
-  selectFactorOB
+  selectFactorOB,
+  selectPrevNumberCandleForLiquidityWithdrawal
 } from "features/OrderBlocks/model/orderBlocks.selector";
 import CoinSelection from "features/coinSelection/CoinSelection";
 import DateComponent from "shared/Date/DateComponent";
 import {importantDates} from "shared/Date/generalDates";
+import FindOB from "features/OrderBlocks/ui/findOB/findOB";
 
 const App = () => {
 
@@ -29,6 +29,7 @@ const App = () => {
   const factorOB = useSelector(selectFactorOB)
   const currentCandleMustBeOutsideOB = useSelector(selectCurrentCandleMustBeOutsideOB)
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
+  const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
   const optionsBodyOrWickOutsideOB = ['wick', 'body'];
   const [bodyOrWickOutsideOB, setBodyOrWickOutsideOB] = useState('body');
 
@@ -52,15 +53,24 @@ const App = () => {
     dispatch(changeCurrentCandleMustBeOutsideOB({currentCandleMustBeOutsideOB: +e.currentTarget.value}))
   }
 
+  const onChangePrevNumberCandleForLiquidityWithdrawal = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    dispatch(changePrevNumberCandleForLiquidityWithdrawal({prevNumberCandleForLiquidityWithdrawal: +e.currentTarget.value}))
+  }
+
   console.log('Компонент App перерисован')
   return (
     <div>
-      <CoinSelection initialTime={initialTime} timeFrame={timeFrame} />
+      <CoinSelection initialTime={initialTime} timeFrame={timeFrame}/>
       <DateComponent time={initialTime} setTime={setInitialTime}/>
-      <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame} setSelectedOption={setTimeFrame}/>
+      <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame}
+                setSelectedOption={setTimeFrame}/>
       <div style={{display: 'flex'}}>
+        <Input placeholder={prevNumberCandleForLiquidityWithdrawal.toString()}
+               label={'Кол-во свечей для снятия ликвидности'}
+               onChange={onChangePrevNumberCandleForLiquidityWithdrawal}/>
         <Input placeholder={factorOB.toString()}
                label={'Расширение ОБ'}
+               step={0.1}
                onChange={onChangeFactorOB}/>
         <Input placeholder={candlesNumberForInitializeOB.toString()}
                label={'Пар-р индикатора'}
@@ -75,10 +85,11 @@ const App = () => {
       </div>
       <Data initialTime={initialTime} timeFrame={timeFrame} setSymbols={setSymbols} symbols={symbols}/>
       <ErrorSnackbar/>
-      <FindBearishOB/>
-      <FindBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}
-                     outsideOrderBlockCandleIndex={currentCandleMustBeOutsideOB}/>
-      <SummaryOB/>
+      <FindOB/>
+      {/*<FindBearishOB/>*/}
+      {/*<FindBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}*/}
+      {/*               outsideOrderBlockCandleIndex={currentCandleMustBeOutsideOB}/>*/}
+      {/*<SummaryOB/>*/}
     </div>
   );
 };

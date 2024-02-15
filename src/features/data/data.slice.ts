@@ -1,4 +1,4 @@
-import {dataType, getKline} from "shared/api/getKlines";
+import {DataType, getKline} from "shared/api/getKlines";
 import {createSlice} from "@reduxjs/toolkit";
 import {isLoading, setAppError} from "app/app.slice";
 import axios from "axios";
@@ -7,7 +7,7 @@ import {createAppAsyncThunk} from "utils/create-app-async-thunk";
 const slice = createSlice({
   name: 'data',
   initialState: {
-    data: [] as dataType[]
+    data: [] as DataType[]
   },
   reducers: {
     clearData: (state) => {
@@ -23,12 +23,12 @@ const slice = createSlice({
 })
 
 export const fetchFirstData = createAppAsyncThunk<{
-  data: dataType[]
+  data: DataType[]
 }, FetchDataArgs>('data/fetchData', async (arg, thunkAPI) => {
   const {dispatch, rejectWithValue} = thunkAPI
   try {
     dispatch(isLoading({isLoading: true}))
-    const responseData: dataType[] = await getKline(`${arg.symbols}USDT`, arg.timeFrame, arg.initialTime as number);
+    const responseData: DataType[] = await getKline(`${arg.symbols}USDT`, arg.timeFrame, arg.initialTime as number);
     if (responseData.length) {
       return {data: responseData}
     } else {
@@ -36,7 +36,7 @@ export const fetchFirstData = createAppAsyncThunk<{
     }
   } catch (e) {
     if (axios.isAxiosError<ErrorType>(e)) {
-      const error = e.response ? e.response.data.msg : e.message
+      const error = e.response?.data.msg ? e.response.data.msg : e.message;
       dispatch(setAppError({error: error}));
       return rejectWithValue(null);
     }

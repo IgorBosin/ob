@@ -48,13 +48,13 @@ const NotEnteringOrderBlocks = ({orderBlocksIndexes, enteringCandleIndexes}: Pro
       if (isRedCandle(candle)) {
         const nearestBullOB = (candle.high - currentPrice) / currentPrice * 100
         bullOB.push(nearestBullOB)
-        // console.log('bull OB', nearestBullOB)
+        console.log('bull OB', nearestBullOB)
 
       }
       if (isGreenCandle(candle)) {
         const nearestBearOB: number = (candle.low - currentPrice) / currentPrice * 100
         bearOB.push(nearestBearOB)
-        // console.log('bear OB', nearestBearOB)
+        console.log('bear OB', nearestBearOB)
       }
     })
     percentToEntryPoint.nearestBullOB = Math.max(...bullOB)

@@ -3,10 +3,15 @@ import {coins} from "features/coinSelection/coins";
 import {getCoinInfo, SummaryInfo} from "features/coinSelection/getCoinInfo";
 import {setAppError} from "app/app.slice";
 import {ErrorType} from "features/data/data.slice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import * as XLSX from 'xlsx';
 import {formattedDate} from "shared/Date/formattedDate";
+import {
+  selectCandlesNumberForInitializeOB,
+  selectFactorOB,
+  selectPrevNumberCandleForLiquidityWithdrawal
+} from "features/OrderBlocks/model/orderBlocks.selector";
 
 type Props = {
   timeFrame: string
@@ -16,6 +21,10 @@ type Props = {
 const CoinSelection = ({timeFrame, initialTime}: Props) => {
   const [tableData, setTableData] = useState<SummaryInfo[]>([]);
   const [loading, setLoading] = useState(false);
+  const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
+  const factorOB = useSelector(selectFactorOB)
+  const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
+
   const [sortConfig, setSortConfig] = useState<{ key: string | null, direction: string }>({
     key: null,
     direction: 'asc'
@@ -24,19 +33,33 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
 
 
   const iterCoin = async () => {
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
     setLoading(true);
     try {
+      setLoading(false);
       //------ДЛЯ ПАРАЛЛЕЛЬНОГО ЗАПРОСА---------------
-      const coinPromises = coins.map((coin) => getCoinInfo(coin, timeFrame, initialTime));
+      const coinPromises = coins.map((coin) => getCoinInfo(
+        coin,
+        timeFrame,
+        initialTime,
+        prevNumberCandleForLiquidityWithdrawal,
+        factorOB,
+        candlesNumberForInitializeOB));
       const data: SummaryInfo[] = await Promise.all(coinPromises);
       //--------------------------------------------------
 
-      setLoading(false);
 
       //------ДЛЯ ПОСЛЕДОВАТЕЛЬНОГО ЗАПРОСА---------------
       // const data: SummaryInfo[] = [];
       // for (const coin of coins) {
-      //   const info = await getCoinInfo(coin, timeFrame, initialTime);
+      //   const info = await getCoinInfo(
+      //     coin,
+      //     timeFrame,
+      //     initialTime,
+      //     prevNumberCandleForLiquidityWithdrawal,
+      //     factorOB,
+      //     candlesNumberForInitializeOB);
       //   data.push(info);
       // }
       //--------------------------------------------------
@@ -46,10 +69,11 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
     } catch (e) {
       setLoading(false);
       if (axios.isAxiosError<ErrorType>(e)) {
-        const error = e.response ? e.response.data.msg : e.message;
+        const error = e.response?.data.msg ? e.response.data.msg : e.message;
         dispatch(setAppError({error: error}));
+      } else {
+        dispatch(setAppError({error: (e as Error).message}));
       }
-      dispatch(setAppError({error: (e as Error).message}));
     }
   };
 
@@ -118,7 +142,7 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
             <td>{info.win}</td>
             <td>{info.lose}</td>
             <td>{info.earnPoints}</td>
-            <td>{info.persentWinningTrades}</td>
+            <td>{info.percentWinningTrades}</td>
             <td>{info.maxLostTradesInRow}</td>
             <td>{info.strategyAssessment}</td>
             <td>{info.fee}</td>

@@ -1,17 +1,17 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {dataType} from "shared/api/getKlines";
+import {DataType} from "shared/api/getKlines";
 import {selectData} from "features/data/data.selector";
 import {
   selectBodyOrWickOutsideOB,
   selectCurrentCandleMustBeOutsideOB
 } from "features/OrderBlocks/model/orderBlocks.selector";
 import ResultBullishOBs
-  from "features/OrderBlocks/ui/BullishOB/filterOBByLiquidityWithdrawal/filterBySomeNextCandleOutsideOB/resultBullishOBs/resultBullishOBs";
+  from "utils/deleted/BullishOB/filterOBByLiquidityWithdrawal/filterBySomeNextCandleOutsideOB/resultBullishOBs/resultBullishOBs";
 
 
 type Props = {
-  oBByLiquidityWithdrawal: dataType[]
+  oBByLiquidityWithdrawal: DataType[]
 }
 
 const FilterBullOBBySomeNextCandleOutsideOB = ({oBByLiquidityWithdrawal}: Props) => {
@@ -19,7 +19,7 @@ const FilterBullOBBySomeNextCandleOutsideOB = ({oBByLiquidityWithdrawal}: Props)
   const bodyOrWickOutsideOB = useSelector(selectBodyOrWickOutsideOB)
   const currentCandleMustBeOutsideOB = useSelector(selectCurrentCandleMustBeOutsideOB)
 
-  const filterBullOBBySomeNextCandleOutsideOB = (orderBlockList: dataType[], numberCandleMustBeOutsideOB: number) => {
+  const filterBullOBBySomeNextCandleOutsideOB = (orderBlockList: DataType[], numberCandleMustBeOutsideOB: number) => {
     if (!numberCandleMustBeOutsideOB) return orderBlockList
     const sortOBs = []
     for (const orderBlock of orderBlockList) {

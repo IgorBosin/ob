@@ -1,7 +1,7 @@
 export const coins010122 = [
   '1000SHIB', '1000XEC', '1INCH', 'AAVE', 'ADA', 'ALGO', 'ALICE', 'ALPHA', 'ANKR', 'ANT',
   'ARPA', 'AR', 'ATA', 'ATOM', 'AUDIO', 'AVAX', 'AXS', 'BAKE', 'BAL', 'BAND', 'BAT', 'BCH',
-  'BEL', 'BLZ', 'BNB', 'BTCDOM', 'BTC', 'C98', 'CELO', 'CELR', 'CHR', 'CHZ', 'COMP', 'COTI',
+  'BEL', 'BLZ', 'BNB', 'BTC', 'C98', 'CELO', 'CELR', 'CHR', 'CHZ', 'COMP', 'COTI',
   'CRV', 'CTK', 'CTSI', 'DASH', 'DEFI', 'DENT', 'DGB', 'DOGE', 'DOT', 'DYDX', 'EGLD', 'ENJ',
   'ENS', 'EOS', 'ETC', 'ETH', 'FIL', 'FLM', 'FTM', 'GALA', 'GRT', 'GTC', 'HBAR', 'HOT', 'ICX',
   'IOST', 'IOTA', 'IOTX', 'KAVA', 'KLAY', 'KNC', 'KSM', 'LINA', 'LINK', 'LIT', 'LPT', 'LRC',
@@ -264,4 +264,4 @@ const middleIndex = Math.ceil(coinsAll.length / 2);
 export const coins__ = coinsAll.slice(0, middleIndex);
 export const coins_ = coinsAll.slice(middleIndex);
 
-export const coins = coinsAll
+export const coins = coins010122

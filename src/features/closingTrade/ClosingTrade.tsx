@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {dataType} from "shared/api/getKlines";
+import {DataType} from "shared/api/getKlines";
 import Input from "shared/Input/Input";
 import {formattedDate} from "shared/Date/formattedDate";
 import {getLengthCandle, isGreenCandle, isRedCandle} from "utils/actions";
 import {selectData} from "features/data/data.selector";
-import {selectFactorOB, selectFee, selectLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.selector";
+import {selectFactorOB, selectFee} from "features/OrderBlocks/model/orderBlocks.selector";
 import {Checkbox, FormControlLabel} from "@mui/material";
-import {setLiquidityWithdrawal} from "features/OrderBlocks/model/orderBlocks.slice";
 import {showMaxZeroInRow} from "features/closingTrade/actions";
 
 type Props = {
@@ -22,11 +21,10 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   const [isShowOnlyBearOB, setIsShowOnlyBearOB] = useState(true)
   const [isShowOnlyBullOB, setIsShowOnlyBullOB] = useState(true)
   const factorOB = useSelector(selectFactorOB)
-  const liquidityWithdrawal = useSelector(selectLiquidityWithdrawal)
   const dispatch = useDispatch()
 
 
-  const closingTrade = (candles: dataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
+  const closingTrade = (candles: DataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
     let obj = {
       win: 0,
       lose: 0,
@@ -116,22 +114,17 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
         label="Green OB"
         labelPlacement="bottom"
       />
-      <FormControlLabel
-        control={<Checkbox checked={liquidityWithdrawal}
-                           onChange={() => dispatch(setLiquidityWithdrawal({liquidityWithdrawal: !liquidityWithdrawal}))}/>}
-        label="Снят-е ликв-ти(треб обнов граф)"
-        labelPlacement="bottom"
-      />
       <div>
         <Input label={'RR'} placeholder={ratio.toString()} onChange={(e) => setRatio(+e.currentTarget.value)}/>
         <ul>всего сделок: {res.win + res.lose}</ul>
-        <ul>WIN: {res.win}. С учетом соотношения: {res.win * ratio} </ul>
-        <ul>LOSE: {res.lose}  </ul>
+        <ul>win: {res.win}. С учетом соотношения: {res.win * ratio} </ul>
+        <ul>lose: {res.lose}  </ul>
         <ul>сколько заработал единиц риска: {earn}</ul>
         <ul>какой % прибыльных сделок: {resInfo}</ul>
         <ul>максимально возможное количество проигранных сделок подряд: {maxZeroInRow}</ul>
         <ul>насколько стратегия выигрышная: {expectancy.toFixed(3)} </ul>
         <ul>комиссия: {fee.toFixed(2)}</ul>
+        <ul>итог(при 10$ риска): {earn * 10 - +fee.toFixed(2)}</ul>
         <ul>ОБ где на свече входа получился ТП: {arrEarn}</ul>
       </div>
     </div>

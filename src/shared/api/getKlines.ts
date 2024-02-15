@@ -4,7 +4,7 @@ export async function getKline(pair: string, interval: string, startTime: number
   const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${pair}&interval=${interval}&limit=${limit}&startTime=${startTime}`;
   const data = await axios.get<BaseResponseType[]>(url);
 
-  const transformedData: dataType[] = data.data.map((series) => ({
+  const transformedData: DataType[] = data.data.map((series) => ({
     openTime: series[0],
     open: parseFloat(series[1]),
     high: parseFloat(series[2]),
@@ -37,7 +37,7 @@ type BaseResponseType = [
   string     // Неизвестное поле (тип STRING)
 ];
 
-export type dataType = {
+export type DataType = {
   openTime: number
   open: number
   high: number

@@ -1,10 +1,10 @@
 import React from 'react';
 import {useDispatch} from "react-redux";
-import {dataType} from "shared/api/getKlines";
+import {DataType} from "shared/api/getKlines";
 import {getBearishOB} from "features/OrderBlocks/model/orderBlocks.slice";
 
 type Props = {
-  filteredBearishOB: dataType[]
+  filteredBearishOB: DataType[]
 }
 
 const ResultBearishOBs = ({filteredBearishOB}: Props) => {

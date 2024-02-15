@@ -1,11 +1,11 @@
-import {dataType} from "shared/api/getKlines";
+import {DataType} from "shared/api/getKlines";
 import {formattedDate} from "shared/Date/formattedDate";
 import React from 'react';
 import {useSelector} from "react-redux";
 import {selectData} from "features/data/data.selector";
 
 type Props = {
-  candles: dataType[]
+  candles: DataType[]
 }
 
 const ShowCandles = ({candles}: Props) => {
