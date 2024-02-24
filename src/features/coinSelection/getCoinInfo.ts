@@ -13,7 +13,10 @@ export const getCoinInfo = async (
   initialTime: number | null,
   prevNumberCandleForLiquidityWithdrawal: number,
   factorOB: number,
-  candlesNumberForInitializeOB: number): Promise<SummaryInfo> => {
+  candlesNumberForInitializeOB: number,
+  isShowOnlyBullOB: boolean,
+  isShowOnlyBearOB: boolean
+): Promise<SummaryInfo> => {
 
 
   const summaryInfo: SummaryInfo = {
@@ -32,11 +35,11 @@ export const getCoinInfo = async (
     nearestBullOB: 0,
     nearestBearOB: 0,
   }
-  const isShowOnlyBearOB = true
-  const isShowOnlyBullOB = true
+  // const isShowOnlyBearOB = true
+  // const isShowOnlyBullOB = true
   const ratio = 2 // выбор небоходимого соотношения риск\прибыль
   const data: DataType[] = []
-  const firstData: DataType[] = await getKline(`${coin}USDT`, timeFrame, initialTime);
+  const firstData: DataType[] = await getKline(coin, timeFrame, initialTime);
   data.push(...firstData)
 
   // for (let i = 0; i < 3; i++) {

@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx';
 import {formattedDate} from "shared/Date/formattedDate";
 import {
   selectCandlesNumberForInitializeOB,
-  selectFactorOB,
+  selectFactorOB, selectIsShowOnlyBearOB, selectIsShowOnlyBullOB,
   selectPrevNumberCandleForLiquidityWithdrawal
 } from "features/OrderBlocks/model/orderBlocks.selector";
 
@@ -24,6 +24,8 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
   const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
   const factorOB = useSelector(selectFactorOB)
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
+  const isShowOnlyBearOB = useSelector(selectIsShowOnlyBearOB)
+  const isShowOnlyBullOB = useSelector(selectIsShowOnlyBullOB)
 
   const [sortConfig, setSortConfig] = useState<{ key: string | null, direction: string }>({
     key: null,
@@ -45,7 +47,10 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
         initialTime,
         prevNumberCandleForLiquidityWithdrawal,
         factorOB,
-        candlesNumberForInitializeOB));
+        candlesNumberForInitializeOB,
+        isShowOnlyBullOB,
+        isShowOnlyBearOB
+      ));
       const data: SummaryInfo[] = await Promise.all(coinPromises);
       //--------------------------------------------------
 
@@ -59,7 +64,10 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
       //     initialTime,
       //     prevNumberCandleForLiquidityWithdrawal,
       //     factorOB,
-      //     candlesNumberForInitializeOB);
+      //     candlesNumberForInitializeOB,
+      //     isShowOnlyBullOB,
+      //     isShowOnlyBearOB
+      //   );
       //   data.push(info);
       // }
       //--------------------------------------------------
@@ -114,47 +122,55 @@ const CoinSelection = ({timeFrame, initialTime}: Props) => {
       return null;
     }
 
+    const calculateTotalEnteringTrades = () => {
+      return tableData.reduce((total, info) => total + info.earnPoints, 0);
+    };
+
     return (
-      <table style={{border: '1px solid #ddd', textAlign: 'center', width: '100%'}}>
-        <thead>
-        <tr>
-          <th onClick={() => sortByColumn('coin')}>Монета</th>
-          <th onClick={() => sortByColumn('allEnteringTrades')}>Всего сделок</th>
-          <th onClick={() => sortByColumn('win')}>Выиграл</th>
-          <th onClick={() => sortByColumn('lose')}>Проиграл</th>
-          <th onClick={() => sortByColumn('earnPoints')}>Заработал очков</th>
-          <th onClick={() => sortByColumn('persentWinningTrades')}>Процент выигрышных сделок</th>
-          <th onClick={() => sortByColumn('maxLostTradesInRow')}>Макс кол-во сделок проиграл подряд</th>
-          <th onClick={() => sortByColumn('strategyAssessment')}>Оценка монеты</th>
-          <th onClick={() => sortByColumn('fee')}>Комиссия</th>
-          <th onClick={() => sortByColumn('total')}>Итого</th>
-          <th onClick={() => sortByColumn('nearestBullOB')}>Ближайш бычий ОБ</th>
-          <th onClick={() => sortByColumn('nearestBearOB')}>Ближайш медвеж ОБ</th>
-          <th onClick={() => sortByColumn('openTime')}>Начало графика</th>
-          <th onClick={() => sortByColumn('closeTime')}>Конец графика</th>
-        </tr>
-        </thead>
-        <tbody>
-        {tableData.map((info, index) => (
-          <tr key={index}>
-            <td>{info.coin}</td>
-            <td>{info.allEnteringTrades}</td>
-            <td>{info.win}</td>
-            <td>{info.lose}</td>
-            <td>{info.earnPoints}</td>
-            <td>{info.percentWinningTrades}</td>
-            <td>{info.maxLostTradesInRow}</td>
-            <td>{info.strategyAssessment}</td>
-            <td>{info.fee}</td>
-            <td>{info.total}</td>
-            <td>{info.nearestBullOB}</td>
-            <td>{info.nearestBearOB}</td>
-            <td>{formattedDate(info.openTime)}</td>
-            <td>{formattedDate(info.closeTime)}</td>
+      <div>
+        <p>Total Earn points: {calculateTotalEnteringTrades()}</p>
+        <table style={{border: '1px solid #ddd', textAlign: 'center', width: '100%'}}>
+          <thead>
+          <tr>
+            <th onClick={() => sortByColumn('coin')}>Монета</th>
+            <th onClick={() => sortByColumn('allEnteringTrades')}>Всего сделок</th>
+            <th onClick={() => sortByColumn('win')}>Выиграл</th>
+            <th onClick={() => sortByColumn('lose')}>Проиграл</th>
+            <th onClick={() => sortByColumn('earnPoints')}>Заработал очков</th>
+            <th onClick={() => sortByColumn('persentWinningTrades')}>Процент выигрышных сделок</th>
+            <th onClick={() => sortByColumn('maxLostTradesInRow')}>Макс кол-во сделок проиграл подряд</th>
+            <th onClick={() => sortByColumn('strategyAssessment')}>Оценка монеты</th>
+            <th onClick={() => sortByColumn('fee')}>Комиссия</th>
+            <th onClick={() => sortByColumn('total')}>Итого</th>
+            <th onClick={() => sortByColumn('nearestBullOB')}>Ближайш бычий ОБ</th>
+            <th onClick={() => sortByColumn('nearestBearOB')}>Ближайш медвеж ОБ</th>
+            <th onClick={() => sortByColumn('openTime')}>Начало графика</th>
+            <th onClick={() => sortByColumn('closeTime')}>Конец графика</th>
           </tr>
-        ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {tableData.map((info, index) => (
+            <tr key={index}>
+              <td>{info.coin}</td>
+              <td>{info.allEnteringTrades}</td>
+              <td>{info.win}</td>
+              <td>{info.lose}</td>
+              <td>{info.earnPoints}</td>
+              <td>{info.percentWinningTrades}</td>
+              <td>{info.maxLostTradesInRow}</td>
+              <td>{info.strategyAssessment}</td>
+              <td>{info.fee}</td>
+              <td>{info.total}</td>
+              <td>{info.nearestBullOB}</td>
+              <td>{info.nearestBearOB}</td>
+              <td>{formattedDate(info.openTime)}</td>
+              <td>{formattedDate(info.closeTime)}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+
     );
   };
 

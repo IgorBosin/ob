@@ -1,7 +1,7 @@
 import {DataType} from "shared/api/getKlines";
 import {isRedCandle} from "utils/actions";
 
-export const filterOBByLiquidityWithdrawal = (data: DataType[], orderBlockList: DataType[], prevNumberCandleForLiquidityWithdrawal: number) => {
+export const filterOBByLiquidityWithdrawal = (data: DataType[], orderBlockList: DataType[], prevNumberCandleForLiquidityWithdrawal: number):DataType[] => {
   if (!prevNumberCandleForLiquidityWithdrawal) return orderBlockList
 
   const redCandle: DataType[] = []

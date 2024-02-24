@@ -35,7 +35,7 @@ const OpenTrade = ({orderBlocksIndexes}: Props) => {
   }, [data, orderBlocksIndexes]);
 
 
-  console.log('перерисован компонент OpenTrade')
+  // console.log('перерисован компонент OpenTrade')
   return (
     <div style={{display: "flex"}}>
       <ClosingTrade enteringCandleIndexes={enteringCandleIndexes} orderBlocksIndexes={orderBlocksIndexes}/>

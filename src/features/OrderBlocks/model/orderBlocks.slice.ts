@@ -13,7 +13,9 @@ const slice = createSlice({
     currentCandleMustBeOutsideOB: 0,
     bodyOrWickOutsideOB: 'body',
     fee: 0,
-    prevNumberCandleForLiquidityWithdrawal: 5
+    prevNumberCandleForLiquidityWithdrawal: 5,
+    isShowOnlyBearOB: true,
+    isShowOnlyBullOB: true,
   },
   reducers: {
     getAllOB: (state, action: PayloadAction<{ allOB: DataType[] }>) => {
@@ -44,7 +46,13 @@ const slice = createSlice({
       prevNumberCandleForLiquidityWithdrawal: number
     }>) => {
       state.prevNumberCandleForLiquidityWithdrawal = action.payload.prevNumberCandleForLiquidityWithdrawal
-    }
+    },
+    showOnlyBearOB: (state, action: PayloadAction<{ isShowOnlyBearOB: boolean }>) => {
+      state.isShowOnlyBearOB = action.payload.isShowOnlyBearOB
+    },
+    showOnlyBullOB: (state, action: PayloadAction<{ isShowOnlyBullOB: boolean }>) => {
+      state.isShowOnlyBullOB = action.payload.isShowOnlyBullOB
+    },
   }, extraReducers: (builder) => {
     builder
       .addCase(clearData, (state, action) => {
@@ -66,4 +74,6 @@ export const {
   changeBodyOrWickOutsideOB,
   getFee,
   changePrevNumberCandleForLiquidityWithdrawal,
+  showOnlyBullOB,
+  showOnlyBearOB,
 } = slice.actions

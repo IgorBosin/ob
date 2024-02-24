@@ -33,7 +33,7 @@ const Data = ({symbols, timeFrame, setSymbols, initialTime}: Props) => {
     dispatch(fetchFirstData({symbols, timeFrame, initialTime}))
   }
 
-  console.log('компонент Data перерисован')
+  // console.log('компонент Data перерисован')
   return (
     <div style={{display: 'flex', alignItems: 'center'}}>
       <Input margin={"none"} type={"text"} label={'монета'}

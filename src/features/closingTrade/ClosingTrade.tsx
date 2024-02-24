@@ -5,7 +5,12 @@ import Input from "shared/Input/Input";
 import {formattedDate} from "shared/Date/formattedDate";
 import {getLengthCandle, isGreenCandle, isRedCandle} from "utils/actions";
 import {selectData} from "features/data/data.selector";
-import {selectFactorOB, selectFee} from "features/OrderBlocks/model/orderBlocks.selector";
+import {
+  selectFactorOB,
+  selectFee,
+  selectIsShowOnlyBearOB,
+  selectIsShowOnlyBullOB
+} from "features/OrderBlocks/model/orderBlocks.selector";
 import {Checkbox, FormControlLabel} from "@mui/material";
 import {showMaxZeroInRow} from "features/closingTrade/actions";
 
@@ -18,11 +23,9 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
   const data = useSelector(selectData)
   const fee = useSelector(selectFee)
   const [ratio, setRatio] = useState(2) // выбор небоходимого соотношения риск\прибыль
-  const [isShowOnlyBearOB, setIsShowOnlyBearOB] = useState(true)
-  const [isShowOnlyBullOB, setIsShowOnlyBullOB] = useState(true)
+  const isShowOnlyBearOB = useSelector(selectIsShowOnlyBearOB)
+  const isShowOnlyBullOB = useSelector(selectIsShowOnlyBullOB)
   const factorOB = useSelector(selectFactorOB)
-  const dispatch = useDispatch()
-
 
   const closingTrade = (candles: DataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
     let obj = {
@@ -101,19 +104,10 @@ const ClosingTrade = ({enteringCandleIndexes, orderBlocksIndexes}: Props) => {
 
   const maxZeroInRow = showMaxZeroInRow(res.tradesInRow.point)
 
-  console.log('перерисован компонент CloseTrade')
+  // console.log('перерисован компонент CloseTrade')
+
   return (
     <div>
-      <FormControlLabel
-        control={<Checkbox checked={isShowOnlyBearOB} onChange={() => setIsShowOnlyBearOB(!isShowOnlyBearOB)}/>}
-        label="Red OB"
-        labelPlacement="bottom"
-      />
-      <FormControlLabel
-        control={<Checkbox checked={isShowOnlyBullOB} onChange={() => setIsShowOnlyBullOB(!isShowOnlyBullOB)}/>}
-        label="Green OB"
-        labelPlacement="bottom"
-      />
       <div>
         <Input label={'RR'} placeholder={ratio.toString()} onChange={(e) => setRatio(+e.currentTarget.value)}/>
         <ul>всего сделок: {res.win + res.lose}</ul>

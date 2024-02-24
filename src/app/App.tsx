@@ -10,23 +10,31 @@ import {
   changeCurrentCandleMustBeOutsideOB,
   changeFactorOB,
   changePrevNumberCandleForLiquidityWithdrawal,
-  setCandlesNumberForInitializeOB
+  setCandlesNumberForInitializeOB,
+  showOnlyBearOB,
+  showOnlyBullOB
 } from "features/OrderBlocks/model/orderBlocks.slice";
 import {
   selectCandlesNumberForInitializeOB,
   selectCurrentCandleMustBeOutsideOB,
   selectFactorOB,
+  selectIsShowOnlyBearOB,
+  selectIsShowOnlyBullOB,
   selectPrevNumberCandleForLiquidityWithdrawal
 } from "features/OrderBlocks/model/orderBlocks.selector";
 import CoinSelection from "features/coinSelection/CoinSelection";
 import DateComponent from "shared/Date/DateComponent";
 import {importantDates} from "shared/Date/generalDates";
 import FindOB from "features/OrderBlocks/ui/findOB/findOB";
+import {Checkbox, FormControlLabel} from "@mui/material";
+import NewStrategy from "app/newStrategy/NewStrategy";
 
 const App = () => {
 
   const dispatch = useDispatch()
   const factorOB = useSelector(selectFactorOB)
+  const isShowOnlyBearOB = useSelector(selectIsShowOnlyBearOB)
+  const isShowOnlyBullOB = useSelector(selectIsShowOnlyBullOB)
   const currentCandleMustBeOutsideOB = useSelector(selectCurrentCandleMustBeOutsideOB)
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
   const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
@@ -57,14 +65,34 @@ const App = () => {
     dispatch(changePrevNumberCandleForLiquidityWithdrawal({prevNumberCandleForLiquidityWithdrawal: +e.currentTarget.value}))
   }
 
-  console.log('Компонент App перерисован')
+
+  const onCheckIsShowOnlyBearOB = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(showOnlyBearOB({isShowOnlyBearOB: e.currentTarget.checked}))
+  }
+
+  const onCheckIsShowOnlyBullOB = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(showOnlyBullOB({isShowOnlyBullOB: e.currentTarget.checked}))
+  }
+
+  // console.log('Компонент App перерисован')
   return (
     <div>
+      <NewStrategy initialTime={initialTime}/>
       <CoinSelection initialTime={initialTime} timeFrame={timeFrame}/>
       <DateComponent time={initialTime} setTime={setInitialTime}/>
       <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame}
                 setSelectedOption={setTimeFrame}/>
       <div style={{display: 'flex'}}>
+        <FormControlLabel
+          control={<Checkbox checked={isShowOnlyBullOB} onChange={onCheckIsShowOnlyBullOB}/>}
+          label="Red OB"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={isShowOnlyBearOB} onChange={onCheckIsShowOnlyBearOB}/>}
+          label="Green OB"
+          labelPlacement="bottom"
+        />
         <Input placeholder={prevNumberCandleForLiquidityWithdrawal.toString()}
                label={'Кол-во свечей для снятия ликвидности'}
                onChange={onChangePrevNumberCandleForLiquidityWithdrawal}/>

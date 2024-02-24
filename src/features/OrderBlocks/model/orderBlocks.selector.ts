@@ -11,4 +11,6 @@ export const selectBodyOrWickOutsideOB = (state: AppRootStateType): string => st
 export const selectCurrentCandleMustBeOutsideOB = (state: AppRootStateType): number => state.orderBlocks.currentCandleMustBeOutsideOB
 export const selectFee = (state: AppRootStateType): number => state.orderBlocks.fee
 export const selectPrevNumberCandleForLiquidityWithdrawal = (state: AppRootStateType): number => state.orderBlocks.prevNumberCandleForLiquidityWithdrawal
+export const selectIsShowOnlyBullOB = (state: AppRootStateType): boolean => state.orderBlocks.isShowOnlyBullOB
+export const selectIsShowOnlyBearOB = (state: AppRootStateType): boolean => state.orderBlocks.isShowOnlyBearOB
 

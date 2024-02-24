@@ -3,6 +3,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {isLoading, setAppError} from "app/app.slice";
 import axios from "axios";
 import {createAppAsyncThunk} from "utils/create-app-async-thunk";
+import {ar} from "date-fns/locale";
 
 const slice = createSlice({
   name: 'data',
@@ -28,7 +29,7 @@ export const fetchFirstData = createAppAsyncThunk<{
   const {dispatch, rejectWithValue} = thunkAPI
   try {
     dispatch(isLoading({isLoading: true}))
-    const responseData: DataType[] = await getKline(`${arg.symbols}USDT`, arg.timeFrame, arg.initialTime as number);
+    const responseData: DataType[] = await getKline(arg.symbols, arg.timeFrame, arg.initialTime as number);
     if (responseData.length) {
       return {data: responseData}
     } else {
