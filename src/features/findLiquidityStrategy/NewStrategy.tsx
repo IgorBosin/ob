@@ -4,25 +4,18 @@ import {setAppError} from "app/app.slice";
 import {ErrorType} from "features/orderBlockStrategy/data/data.slice";
 import {useDispatch} from "react-redux";
 import axios from "axios";
-import * as XLSX from 'xlsx';
 import {ShowDistanceToLiquidity, showDistanceToLiquidity} from "features/findLiquidityStrategy/showDistanceToLiquidity";
 import soundFile from "utils/soundFiles/sound.mp3"
+import DynamicTable from "shared/Table/DynamicTable";
+import {exportToExcel} from "shared/exportToExcel/exportToExcel";
 
-type Props = {
-  initialTime: number | null
-};
-
-const NewStrategy = ({}: Props) => {
+const NewStrategy = () => {
   const [tableData, setTableData] = useState<ShowDistanceToLiquidity[]>([]);
   const [loading, setLoading] = useState(false);
   const currentDateInMillis = new Date().getTime();
   const millisecondsInDay = 24 * 60 * 60 * 1000;
   const millisecondsInFiveDays = 6 * millisecondsInDay;
   const [playSound, setPlaySound] = useState(false);
-  const [sortConfig, setSortConfig] = useState<{ key: string | null, direction: string }>({
-    key: null,
-    direction: 'asc'
-  });
   const dispatch = useDispatch();
 
 
@@ -59,7 +52,7 @@ const NewStrategy = ({}: Props) => {
       //--------------------------------------------------
 
       setTableData(data);
-      if (data.some(item => item.percentCurrentPriceBeforeSellside < 0.2 )) {
+      if (data.some(item => item.percentCurrentPriceBeforeSellside < 0.2)) {
         // Если есть, устанавливаем флаг для воспроизведения звука
         setPlaySound(true);
       }
@@ -74,86 +67,31 @@ const NewStrategy = ({}: Props) => {
     }
   };
 
-  const exportToExcel = () => {
-    if (!tableData.length) {
-      return;
-    }
+  const columns: Column<ShowDistanceToLiquidity>[] = [
+    {label: 'Coin', prop: "coin"},
+    {label: 'Buyside Liquidity', prop: "percentBeforeBuyside"},
+    {label: 'Sellside Liquidity', prop: 'percentBeforeSellside'},
+    {label: 'Nearest Buyside Liquidity', prop: 'percentCurrentPriceBeforeBuyside'},
+    {label: 'Nearest Sellside Liquidity', prop: 'percentCurrentPriceBeforeSellside'}
+  ];
 
-    const ws = XLSX.utils.json_to_sheet(tableData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'table.xlsx');
-  };
-
-  const sortByColumn = (key: string) => {
-    let direction = 'asc';
-
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-
-    const sortedData = [...tableData].sort((a: any, b: any) => {
-      if (a[key] < b[key]) {
-        return direction === 'asc' ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return direction === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-
-    setTableData(sortedData);
-    setSortConfig({key, direction});
-  };
-
-  const renderTable = () => {
-    if (!tableData.length) {
-      return null;
-    }
-
-    return (
-      <table style={{border: '1px solid #ddd', textAlign: 'center', width: '100%'}}>
-        <thead>
-        <tr>
-          <th onClick={() => sortByColumn('coin')}>Монета</th>
-          <th onClick={() => sortByColumn('percentBeforeBuyside')}>Buyside liquidity</th>
-          <th onClick={() => sortByColumn('percentBeforeSellside')}>Sellside liquidity</th>
-          <th onClick={() => sortByColumn('percentCurrentPriceBeforeBuyside')}>Nearest buyside liquidity</th>
-          <th onClick={() => sortByColumn('percentCurrentPriceBeforeSellside')}>Nearest sellside liquidity</th>
-        </tr>
-        </thead>
-        <tbody>
-        {tableData.map((info, index) => (
-          <tr key={index}>
-            <td style={info.coin === 'BTC' ? {color: 'red'} : {color: 'inherit'}}>{info.coin}</td>
-            <td
-              style={info.percentBeforeBuyside < 0.3 ? {color: 'red'} : {color: 'inherit'}}>{info.percentBeforeBuyside}
-            </td>
-            <td
-              style={info.percentBeforeSellside < 0.3 ? {color: 'red'} : {color: 'inherit'}}>{info.percentBeforeSellside}
-            </td>
-            <td
-              style={info.percentCurrentPriceBeforeBuyside < 0.3 ? {color: 'red'} : {color: 'inherit'}}>{info.percentCurrentPriceBeforeBuyside}
-            </td>
-            <td
-              style={info.percentCurrentPriceBeforeSellside < 0.3 ? {color: 'red'} : {color: 'inherit'}}>{info.percentCurrentPriceBeforeSellside}
-            </td>
-          </tr>
-        ))}
-        </tbody>
-      </table>
-    );
-  };
 
   return (
     <div style={{margin: 'auto', maxWidth: '1500px', marginBottom: '10px'}}>
       <button disabled={loading} onClick={iterCoin}>Show nearest liquidity</button>
-      <button disabled={!tableData.length} onClick={exportToExcel}>
+      <button disabled={!tableData.length} onClick={() => exportToExcel(tableData)}>
         Export to Excel
       </button>
-      {renderTable()}
+      <DynamicTable data={tableData} columns={columns} setData={setTableData}/>
     </div>
   );
 };
 
 export default NewStrategy;
+
+
+export type Column<DataRow> = {
+  label: string;
+  prop: keyof DataRow;
+  style?: React.CSSProperties;
+}
