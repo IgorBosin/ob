@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
-import {coins} from "features/coinSelection/coins";
+import React, {useEffect, useState} from 'react';
+import {coins} from "features/orderBlockStrategy/coinSelection/coins";
 import {setAppError} from "app/app.slice";
-import {ErrorType} from "features/data/data.slice";
+import {ErrorType} from "features/orderBlockStrategy/data/data.slice";
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import * as XLSX from 'xlsx';
-import {ShowDistanceToLiquidity, showDistanceToLiquidity} from "app/newStrategy/showDistanceToLiquidity";
+import {ShowDistanceToLiquidity, showDistanceToLiquidity} from "features/findLiquidityStrategy/showDistanceToLiquidity";
+import soundFile from "utils/soundFiles/sound.mp3"
 
 type Props = {
   initialTime: number | null
@@ -17,13 +18,28 @@ const NewStrategy = ({}: Props) => {
   const currentDateInMillis = new Date().getTime();
   const millisecondsInDay = 24 * 60 * 60 * 1000;
   const millisecondsInFiveDays = 6 * millisecondsInDay;
-
+  const [playSound, setPlaySound] = useState(false);
   const [sortConfig, setSortConfig] = useState<{ key: string | null, direction: string }>({
     key: null,
     direction: 'asc'
   });
   const dispatch = useDispatch();
 
+
+  useEffect(() => {
+    if (playSound) {
+      const audio = new Audio(soundFile);
+      audio.volume = 1
+      audio.play();
+      setPlaySound(false);
+    }
+  }, [playSound]);
+
+  useEffect(() => {
+    // обновляем каждые 2 минуты
+    const intervalId = setInterval(iterCoin, 2 * 60 * 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const iterCoin = async () => {
     setLoading(true);
@@ -43,6 +59,10 @@ const NewStrategy = ({}: Props) => {
       //--------------------------------------------------
 
       setTableData(data);
+      if (data.some(item => item.percentCurrentPriceBeforeSellside < 0.2 )) {
+        // Если есть, устанавливаем флаг для воспроизведения звука
+        setPlaySound(true);
+      }
     } catch (e) {
       setLoading(false);
       if (axios.isAxiosError<ErrorType>(e)) {
@@ -105,7 +125,7 @@ const NewStrategy = ({}: Props) => {
         <tbody>
         {tableData.map((info, index) => (
           <tr key={index}>
-            <td style={info.coin == 'BTC' ? {color: 'red'} : {color: 'inherit'}}>{info.coin}</td>
+            <td style={info.coin === 'BTC' ? {color: 'red'} : {color: 'inherit'}}>{info.coin}</td>
             <td
               style={info.percentBeforeBuyside < 0.3 ? {color: 'red'} : {color: 'inherit'}}>{info.percentBeforeBuyside}
             </td>
