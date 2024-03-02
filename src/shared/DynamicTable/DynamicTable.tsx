@@ -57,7 +57,7 @@ const DynamicTable = <DataRowType extends Record<string, string | number>>({ col
       {data.map((row, rowIndex) => (
         <tr key={rowIndex}>
           {columns.map((column, colIndex) => (
-            <td key={colIndex} style={{ color: row[column.prop] === 'BTC' ? 'red' : 'inherit' }}>
+            <td key={colIndex} style={{ color: row[column.prop] === 'BTC' || row[column.prop] < 0.2 ? 'red' : 'inherit' }}>
               {column.date ? formattedDate(+row[column.prop]) : row[column.prop]}
             </td>
           ))}
