@@ -27,9 +27,10 @@ import DateComponent from "shared/Date/DateComponent";
 import {importantDates} from "shared/Date/generalDates";
 import FindOB from "features/orderBlockStrategy/OrderBlocks/ui/findOB/findOB";
 import {Checkbox, FormControlLabel, LinearProgress} from "@mui/material";
-import NewStrategy from "features/findLiquidityStrategy/NewStrategy";
+import FindLiquidityStrategy from "features/findLiquidityStrategy/FindLiquidityStrategy";
 import {selectIsLoading} from "app/app.selector";
-import PlaySound from "features/findLiquidityStrategy/playSound/playSound";
+import PlaySound from "shared/playSound/playSound";
+import TimeFrame, {TimeFrameType} from "shared/TimeFrame/TimeFrame";
 
 const App = () => {
 
@@ -45,8 +46,7 @@ const App = () => {
   const isLoading = useSelector(selectIsLoading)
 
   const [initialTime, setInitialTime] = useState<number | null>(importantDates.january01year24);
-  const optionsTimeFrame: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
-  const [timeFrame, setTimeFrame] = useState('30m');
+  const [timeFrame, setTimeFrame] = useState<TimeFrameType>('30m');
   const [symbols, setSymbols] = useState('BTC')
 
   useEffect(() => {
@@ -82,11 +82,10 @@ const App = () => {
     <div>
       {isLoading && <LinearProgress/>}
       <PlaySound/>
-      <NewStrategy/>
+      <FindLiquidityStrategy/>
       <CoinSelection initialTime={initialTime} timeFrame={timeFrame}/>
       <DateComponent time={initialTime} setTime={setInitialTime}/>
-      <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame}
-                setSelectedOption={setTimeFrame}/>
+      <TimeFrame timeFrame={timeFrame} setTimeFrame={setTimeFrame}/>
       <div style={{display: 'flex'}}>
         <FormControlLabel
           control={<Checkbox checked={isShowOnlyBullOB} onChange={onCheckIsShowOnlyBullOB}/>}
@@ -119,29 +118,8 @@ const App = () => {
       <Data initialTime={initialTime} timeFrame={timeFrame} setSymbols={setSymbols} symbols={symbols}/>
       <ErrorSnackbar/>
       <FindOB/>
-      {/*<FindBearishOB/>*/}
-      {/*<FindBullishOB bodyOrWickOutsideOB={bodyOrWickOutsideOB}*/}
-      {/*               outsideOrderBlockCandleIndex={currentCandleMustBeOutsideOB}/>*/}
-      {/*<SummaryOB/>*/}
     </div>
   );
 };
 
 export default App;
-
-export type TimeFrameType =
-  '1m'
-  | '3m'
-  | '5m'
-  | '15m'
-  | '30m'
-  | '1h'
-  | '2h'
-  | '4h'
-  | '6h'
-  | '8h'
-  | '12h'
-  | '1d'
-  | '3d'
-  | '1w'
-  | '1mo';
