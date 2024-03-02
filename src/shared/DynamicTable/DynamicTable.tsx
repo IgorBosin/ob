@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
+import {formattedDate} from "shared/Date/formattedDate";
 
 export type Column<DataRow> = {
   label: string;
   prop: keyof DataRow;
+  date?: boolean
   style?: React.CSSProperties;
 };
 
@@ -57,7 +59,7 @@ const DynamicTable = <DataRowType extends Record<string, string | number>>({
       <tr key={rowIndex}>
         {columns.map((column, colIndex) => (
           <td key={colIndex} style={{color: row[column.prop] === 'BTC' ? 'red' : 'inherit'}}>
-            {row[column.prop]}
+            {column.date ? formattedDate(+row[column.prop]) : row[column.prop]}
           </td>
         ))}
       </tr>

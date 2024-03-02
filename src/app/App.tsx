@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 import {ErrorSnackbar} from "shared/ErrorSnackbar/ErrorSnackbar";
-import Data from "features/data/Data";
+import Data from "features/orderBlockStrategy/data/Data";
 import Input from "shared/Input/Input";
 import Dropdown from "shared/Dropdown/Dropdown";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,7 +13,7 @@ import {
   setCandlesNumberForInitializeOB,
   showOnlyBearOB,
   showOnlyBullOB
-} from "features/OrderBlocks/model/orderBlocks.slice";
+} from "features/orderBlockStrategy/OrderBlocks/model/orderBlocks.slice";
 import {
   selectCandlesNumberForInitializeOB,
   selectCurrentCandleMustBeOutsideOB,
@@ -21,13 +21,15 @@ import {
   selectIsShowOnlyBearOB,
   selectIsShowOnlyBullOB,
   selectPrevNumberCandleForLiquidityWithdrawal
-} from "features/OrderBlocks/model/orderBlocks.selector";
-import CoinSelection from "features/coinSelection/CoinSelection";
+} from "features/orderBlockStrategy/OrderBlocks/model/orderBlocks.selector";
+import CoinSelection from "features/orderBlockStrategy/coinSelection/CoinSelection";
 import DateComponent from "shared/Date/DateComponent";
 import {importantDates} from "shared/Date/generalDates";
-import FindOB from "features/OrderBlocks/ui/findOB/findOB";
-import {Checkbox, FormControlLabel} from "@mui/material";
-import NewStrategy from "app/newStrategy/NewStrategy";
+import FindOB from "features/orderBlockStrategy/OrderBlocks/ui/findOB/findOB";
+import {Checkbox, FormControlLabel, LinearProgress} from "@mui/material";
+import NewStrategy from "features/findLiquidityStrategy/NewStrategy";
+import {selectIsLoading} from "app/app.selector";
+import PlaySound from "features/findLiquidityStrategy/playSound/playSound";
 
 const App = () => {
 
@@ -40,6 +42,7 @@ const App = () => {
   const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
   const optionsBodyOrWickOutsideOB = ['wick', 'body'];
   const [bodyOrWickOutsideOB, setBodyOrWickOutsideOB] = useState('body');
+  const isLoading = useSelector(selectIsLoading)
 
   const [initialTime, setInitialTime] = useState<number | null>(importantDates.january01year24);
   const optionsTimeFrame: TimeFrameType[] = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1mo'];
@@ -77,7 +80,9 @@ const App = () => {
   // console.log('Компонент App перерисован')
   return (
     <div>
-      <NewStrategy initialTime={initialTime}/>
+      {isLoading && <LinearProgress/>}
+      <PlaySound/>
+      <NewStrategy/>
       <CoinSelection initialTime={initialTime} timeFrame={timeFrame}/>
       <DateComponent time={initialTime} setTime={setInitialTime}/>
       <Dropdown title={'TimeFrame'} options={optionsTimeFrame} selectedOption={timeFrame}
