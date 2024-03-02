@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios'
 
 export async function getKline(pair: string, interval: string, startTime: number | null, limit = 1000) {
-  const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${pair}USDT&interval=${interval}&limit=${limit}&startTime=${startTime}`;
-  const data = await axios.get<BaseResponseType[]>(url);
+  const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${pair}USDT&interval=${interval}&limit=${limit}&startTime=${startTime}`
+  const data = await axios.get<BaseResponseType[]>(url)
 
   const transformedData: DataType[] = data.data.map((series) => ({
     openTime: series[0],
@@ -16,26 +16,26 @@ export async function getKline(pair: string, interval: string, startTime: number
     trades: series[8],
     takerBaseAssetVolume: parseFloat(series[9]),
     takerQuoteAssetVolume: parseFloat(series[10]),
-    ignored: parseFloat(series[11])
-  }));
+    ignored: parseFloat(series[11]),
+  }))
 
-  return transformedData;
+  return transformedData
 }
 
 type BaseResponseType = [
-  number,    // Время открытия (тип LONG)
-  string,    // Цена открытия (тип STRING)
-  string,    // Наивысшая цена (тип STRING)
-  string,    // Наименьшая цена (тип STRING)
-  string,    // Цена закрытия (тип STRING)
-  string,    // Объем (тип STRING)
-  number,    // Время закрытия (тип LONG)
-  string,    // Объем валюты (тип STRING)
-  number,    // Количество сделок (тип NUMBER)
-  string,    // Тактильный объем (тип STRING)
-  string,    // Объем валюты (тип STRING)
-  string     // Неизвестное поле (тип STRING)
-];
+  number, // Время открытия (тип LONG)
+  string, // Цена открытия (тип STRING)
+  string, // Наивысшая цена (тип STRING)
+  string, // Наименьшая цена (тип STRING)
+  string, // Цена закрытия (тип STRING)
+  string, // Объем (тип STRING)
+  number, // Время закрытия (тип LONG)
+  string, // Объем валюты (тип STRING)
+  number, // Количество сделок (тип NUMBER)
+  string, // Тактильный объем (тип STRING)
+  string, // Объем валюты (тип STRING)
+  string, // Неизвестное поле (тип STRING)
+]
 
 export type DataType = {
   openTime: number

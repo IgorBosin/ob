@@ -1,33 +1,32 @@
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import * as React from 'react'
+import Stack from '@mui/material/Stack'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { useDispatch, useSelector } from 'react-redux'
+import { changeDate } from 'app/options/model/options.slice'
+import { selectDate } from 'app/options/model/options.selector'
 
-type Props = {
-  setTime: (timeInMilliseconds: number | null) => void;
-  time: number | null;
-};
+export default function DateComponent() {
+  const dispatch = useDispatch()
+  const date = useSelector(selectDate)
 
-export default function DateComponent({ time, setTime }: Props) {
-  console.log(time)
+  console.log(date)
   const handleDateChange = (newDate: Date | null) => {
     if (newDate) {
-      const timeInMilliseconds = newDate.getTime();
-      setTime(timeInMilliseconds);
-    } else {
-      setTime(null);
+      const timeInMilliseconds = newDate.getTime()
+      dispatch(changeDate({ date: timeInMilliseconds }))
     }
-  };
+  }
 
-  const referenceDate = time ? new Date(time) : undefined;
+  const referenceDate = date ? new Date(date) : undefined
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={2} sx={{ display: 'inline-block' }}>
         <DateTimePicker
           format={'dd/MM/yyyy HH:mm:ss'}
-          value={time ? new Date(time) : null}
+          value={date ? new Date(date) : null}
           ampm={false}
           slotProps={{ textField: { size: 'small' } }}
           onChange={handleDateChange}
@@ -35,5 +34,5 @@ export default function DateComponent({ time, setTime }: Props) {
         />
       </Stack>
     </LocalizationProvider>
-  );
+  )
 }

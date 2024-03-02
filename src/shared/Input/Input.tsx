@@ -1,6 +1,5 @@
-import React, {FC, forwardRef} from "react";
-import {InputAdornment, TextField} from "@mui/material";
-import {TextFieldProps} from "@mui/material/TextField/TextField";
+import React, { forwardRef } from 'react'
+import { FilledTextFieldProps, InputAdornment, OutlinedTextFieldProps, StandardTextFieldProps, TextField } from '@mui/material'
 
 type Props = {
   step?: number
@@ -15,8 +14,7 @@ type Props = {
   marginTop?: string
 }
 
-const Input: FC<TextFieldProps & Props> = forwardRef(function Input(props, ref) {
-
+const Input = forwardRef<HTMLDivElement, (FilledTextFieldProps | OutlinedTextFieldProps | StandardTextFieldProps) & Props>(function Input(props, ref) {
   const primaryTextColor = 'black'
   const secondaryTextColor = '#999'
 
@@ -41,13 +39,13 @@ const Input: FC<TextFieldProps & Props> = forwardRef(function Input(props, ref) 
       color: secondaryTextColor, // цвет placeholder(label)
       '&.MuiInputLabel-root': {
         '&.Mui-focused': {
-          color: primaryTextColor
-        }
+          color: primaryTextColor,
+        },
       },
     },
     '& .MuiFormHelperText-root.Mui-error': {
       '&.MuiFormHelperText-contained': {
-        marginLeft: 0 // marginLeft у ошибки
+        marginLeft: 0, // marginLeft у ошибки
       },
     },
     '& .MuiInputBase-root': {
@@ -67,22 +65,24 @@ const Input: FC<TextFieldProps & Props> = forwardRef(function Input(props, ref) 
       sx={styles}
       size={'small'}
       type={'number'}
-      variant={"outlined"}
-      margin={"dense"}
+      variant={'outlined'}
+      margin={'dense'}
       InputProps={{
         inputProps: {
           min: props.min,
           max: props.max,
           step: props.step,
         },
-        style: {fontWeight: props.bold},
-        startAdornment: <InputAdornment style={{position: 'absolute', left: '55px'}}
-                                        position="start">{props.suffix}</InputAdornment>,
+        style: { fontWeight: props.bold },
+        startAdornment: (
+          <InputAdornment style={{ position: 'absolute', left: '55px' }} position="start">
+            {props.suffix}
+          </InputAdornment>
+        ),
       }}
-
       {...props}
     />
-  );
-});
+  )
+})
 
-export default Input;
+export default Input

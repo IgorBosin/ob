@@ -1,16 +1,16 @@
-import {AnyAction, combineReducers, configureStore, ThunkAction, ThunkDispatch} from "@reduxjs/toolkit";
-import {appSlice} from "app/app.slice";
-import {dataSlice} from "features/data/data.slice";
-import {orderBlocksSlice} from "features/OrderBlocks/model/orderBlocks.slice";
+import { AnyAction, combineReducers, configureStore, ThunkAction, ThunkDispatch } from '@reduxjs/toolkit'
+import { appSlice } from 'app/app.slice'
+import { dataSlice } from 'features/orderBlockStrategy/data/data.slice'
+import { optionsSlice } from 'app/options/model/options.slice'
 
 const rootReducer = combineReducers({
   app: appSlice,
   data: dataSlice,
-  orderBlocks: orderBlocksSlice
+  orderBlocks: optionsSlice,
 })
 // непосредственно создаём store
 // export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
-export const store = configureStore({reducer: rootReducer})
+export const store = configureStore({ reducer: rootReducer })
 
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
