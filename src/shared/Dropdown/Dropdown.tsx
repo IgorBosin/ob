@@ -1,16 +1,24 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction } from 'react'
+
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
 type Props<T> = {
-  options: T[]
-  dispatchAction?: (action: any) => void // Проп для dispatch
-  setSelectedOption?: Dispatch<SetStateAction<T>>
-  selectedOption: T
-  title: string
   disabled?: boolean
+  dispatchAction?: (action: any) => void // Проп для dispatch
+  options: T[]
+  selectedOption: T
+  setSelectedOption?: Dispatch<SetStateAction<T>>
+  title: string
 }
 
-const Dropdown = <T extends string>({ options, setSelectedOption, selectedOption, title, disabled, dispatchAction }: Props<T>) => {
+const Dropdown = <T extends string>({
+  disabled,
+  dispatchAction,
+  options,
+  selectedOption,
+  setSelectedOption,
+  title,
+}: Props<T>) => {
   const handleChange = (event: SelectChangeEvent) => {
     if (setSelectedOption) {
       setSelectedOption(event.target.value as T)
@@ -23,8 +31,16 @@ const Dropdown = <T extends string>({ options, setSelectedOption, selectedOption
   return (
     <div>
       <FormControl sx={{ m: 0, minWidth: 150 }}>
-        <InputLabel id="select">{title}</InputLabel>
-        <Select size="small" labelId="select" id="select" value={selectedOption} label={title} onChange={handleChange} disabled={disabled}>
+        <InputLabel id={'select'}>{title}</InputLabel>
+        <Select
+          disabled={disabled}
+          id={'select'}
+          label={title}
+          labelId={'select'}
+          onChange={handleChange}
+          size={'small'}
+          value={selectedOption}
+        >
           {options.map((el, index) => (
             <MenuItem key={index} value={el}>
               {el}

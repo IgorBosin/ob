@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { DataType } from 'shared/api/getKlines'
-import { getAllOB, getBearishOB, getBullishOB } from 'app/options/model/options.slice'
-import OpenTrade from 'features/orderBlockStrategy/openTrade/OpenTrade'
-import ShowCandles from 'shared/ShowCandles/ShowCandles'
-import { selectData } from 'features/orderBlockStrategy/data/data.selector'
-import { selectAllOB, selectBearishOB, selectBullishOB } from 'app/options/model/options.selector'
-import { formattedDate } from 'shared/Date/formattedDate'
-import { isRedCandle } from 'shared/getColorCandle/isRedCandle'
+
+import { selectData } from '@/features/orderBlockStrategy/data/data.selector'
+import OpenTrade from '@/features/orderBlockStrategy/openTrade/OpenTrade'
+import { selectAllOB, selectBearishOB, selectBullishOB } from '@/options/model/options.selector'
+import { getAllOB, getBearishOB, getBullishOB } from '@/options/model/options.slice'
+import { formattedDate } from '@/shared/Date/formattedDate'
+import ShowCandles from '@/shared/ShowCandles/ShowCandles'
+import { DataType } from '@/shared/api/getKlines'
+import { isRedCandle } from '@/shared/getColorCandle/isRedCandle'
 
 type Props = {
   orderBlocks: DataType[]
@@ -23,7 +24,7 @@ const ResultOrderBlocksAfterAllFilter = ({ orderBlocks }: Props) => {
   const bullOB: DataType[] = []
   const bearOB: DataType[] = []
 
-  orderBlocks.forEach((el) => {
+  orderBlocks.forEach(el => {
     isRedCandle(el) ? bullOB.push(el) : bearOB.push(el)
   })
 
@@ -34,8 +35,9 @@ const ResultOrderBlocksAfterAllFilter = ({ orderBlocks }: Props) => {
   }, [orderBlocks])
 
   const showCandles = () =>
-    orderBlocks.map((candle) => {
+    orderBlocks.map(candle => {
       const bullOrBear = isRedCandle(candle) ? 'bull' : 'bear'
+
       return (
         <ul key={candle.openTime}>
           <li>
@@ -45,7 +47,7 @@ const ResultOrderBlocksAfterAllFilter = ({ orderBlocks }: Props) => {
       )
     })
 
-  const allOrderBlocksIndexes: number[] = allOB.map((findOrderBlock) => data.indexOf(findOrderBlock))
+  const allOrderBlocksIndexes: number[] = allOB.map(findOrderBlock => data.indexOf(findOrderBlock))
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>

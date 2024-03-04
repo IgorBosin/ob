@@ -2,7 +2,7 @@ export function showMaxZeroInRow(arr: number[]) {
   let maxZeros = 0
   let currentZeros = 0
 
-  for (let num of arr) {
+  for (const num of arr) {
     if (num === 0) {
       currentZeros++
       maxZeros = Math.max(maxZeros, currentZeros)

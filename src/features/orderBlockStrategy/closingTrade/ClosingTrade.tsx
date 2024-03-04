@@ -1,13 +1,19 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { DataType } from 'shared/api/getKlines'
-import { formattedDate } from 'shared/Date/formattedDate'
-import { selectData } from 'features/orderBlockStrategy/data/data.selector'
-import { selectFactorOB, selectFee, selectIsShowOnlyBearOB, selectIsShowOnlyBullOB, selectRiskReward } from 'app/options/model/options.selector'
-import { showMaxZeroInRow } from 'features/orderBlockStrategy/closingTrade/actions'
-import { getLengthCandle } from 'shared/getLenghtCandle/getLengthCandle'
-import { isGreenCandle } from 'shared/getColorCandle/isGreenCandle'
-import { isRedCandle } from 'shared/getColorCandle/isRedCandle'
+import { useSelector } from 'react-redux'
+
+import { showMaxZeroInRow } from '@/features/orderBlockStrategy/closingTrade/actions'
+import { selectData } from '@/features/orderBlockStrategy/data/data.selector'
+import {
+  selectFactorOB,
+  selectFee,
+  selectIsShowOnlyBearOB,
+  selectIsShowOnlyBullOB,
+  selectRiskReward,
+} from '@/options/model/options.selector'
+import { formattedDate } from '@/shared/Date/formattedDate'
+import { DataType } from '@/shared/api/getKlines'
+import { isGreenCandle } from '@/shared/getColorCandle/isGreenCandle'
+import { isRedCandle } from '@/shared/getColorCandle/isRedCandle'
+import { getLengthCandle } from '@/shared/getLenghtCandle/getLengthCandle'
 
 type Props = {
   enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
@@ -21,22 +27,31 @@ const ClosingTrade = ({ enteringCandleIndexes }: Props) => {
   const isShowOnlyBearOB = useSelector(selectIsShowOnlyBearOB)
   const isShowOnlyBullOB = useSelector(selectIsShowOnlyBullOB)
   const factorOB = useSelector(selectFactorOB)
-  const dispatch = useDispatch()
 
-  const closingTrade = (candles: DataType[], enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]) => {
-    let obj = {
-      win: 0,
+  const closingTrade = (
+    candles: DataType[],
+    enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[]
+  ) => {
+    const obj = {
       lose: 0,
       tradesInRow: {
         date: [] as number[],
         point: [] as number[],
       },
+      win: 0,
     }
+
     // проверяем enteringCandleIndexes пробила ли она вниз до лоя orderBlocks.
     for (const enterCandle of enteringCandleIndexes) {
       const lengthCandle = getLengthCandle(candles[enterCandle.orderBlock], factorOB) * riskReward
-      const profitForBullishOB = lengthCandle + candles[enterCandle.orderBlock].low + getLengthCandle(candles[enterCandle.orderBlock], factorOB)
-      const profitForBearishOB = candles[enterCandle.orderBlock].high - getLengthCandle(candles[enterCandle.orderBlock], factorOB) - lengthCandle
+      const profitForBullishOB =
+        lengthCandle +
+        candles[enterCandle.orderBlock].low +
+        getLengthCandle(candles[enterCandle.orderBlock], factorOB)
+      const profitForBearishOB =
+        candles[enterCandle.orderBlock].high -
+        getLengthCandle(candles[enterCandle.orderBlock], factorOB) -
+        lengthCandle
 
       if (isShowOnlyBullOB) {
         // бычий ОБ (свеча красная)
@@ -84,6 +99,7 @@ const ClosingTrade = ({ enteringCandleIndexes }: Props) => {
         }
       }
     }
+
     return obj
   }
 
@@ -93,7 +109,7 @@ const ClosingTrade = ({ enteringCandleIndexes }: Props) => {
 
   const resInfo = (res.win / (res.win + res.lose)) * 100
 
-  const arrEarn = res.tradesInRow.date.map((el) => <li>{formattedDate(el)}</li>)
+  const arrEarn = res.tradesInRow.date.map(el => <li key={el}>{formattedDate(el)}</li>)
 
   const expectancy = (resInfo * riskReward) / 100 - (1 - resInfo / 100)
 
@@ -125,6 +141,6 @@ export default ClosingTrade
 
 export type TradeEntryAndOrderBlockIndexes = {
   entering: number
-  orderBlock: number
   fee: number
+  orderBlock: number
 }

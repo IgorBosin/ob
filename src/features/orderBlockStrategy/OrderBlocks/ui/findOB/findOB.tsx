@@ -1,9 +1,9 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
-import { selectData } from 'features/orderBlockStrategy/data/data.selector'
-import { selectCandlesNumberForInitializeOB } from 'app/options/model/options.selector'
-import { findOB } from 'features/orderBlockStrategy/OrderBlocks/action/findOB'
-import FilterOBByLiquidityWithdrawal from 'features/orderBlockStrategy/OrderBlocks/ui/findOB/filterOBByLiquidityWithdrawal/filterOBByLiquidityWithdrawal'
+
+import { findOB } from '@/features/orderBlockStrategy/OrderBlocks/action/findOB'
+import FilterOBByLiquidityWithdrawal from '@/features/orderBlockStrategy/OrderBlocks/ui/findOB/filterOBByLiquidityWithdrawal/filterOBByLiquidityWithdrawal'
+import { selectData } from '@/features/orderBlockStrategy/data/data.selector'
+import { selectCandlesNumberForInitializeOB } from '@/options/model/options.selector'
 
 const FindOB = () => {
   const data = useSelector(selectData)
@@ -17,4 +17,5 @@ const FindOB = () => {
     </div>
   )
 }
+
 export default FindOB

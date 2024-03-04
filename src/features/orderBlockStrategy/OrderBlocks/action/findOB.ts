@@ -1,6 +1,6 @@
-import { DataType } from 'shared/api/getKlines'
-import { isGreenCandle } from 'shared/getColorCandle/isGreenCandle'
-import { isRedCandle } from 'shared/getColorCandle/isRedCandle'
+import { DataType } from '@/shared/api/getKlines'
+import { isGreenCandle } from '@/shared/getColorCandle/isGreenCandle'
+import { isRedCandle } from '@/shared/getColorCandle/isRedCandle'
 
 export const findOB = (data: DataType[], candlesNumberForInitializeOB: number) => {
   const bearOB = findBearishOB(data, candlesNumberForInitializeOB)
@@ -37,6 +37,7 @@ export const findBearishOB = (data: DataType[], candlesNumberForInitializeOB: nu
       }
     }
   }
+
   return result
 }
 
@@ -68,5 +69,6 @@ export const findBullishOB = (data: DataType[], candlesNumberForInitializeOB: nu
       }
     }
   }
+
   return result
 }

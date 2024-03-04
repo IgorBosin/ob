@@ -1,24 +1,24 @@
-import { DataType, getKline } from 'shared/api/getKlines'
+import { setLoading } from '@/app.slice'
+import { DataType, getKline } from '@/shared/api/getKlines'
+import { createAppAsyncThunk } from '@/shared/createAppAsyncThunk/create-app-async-thunk'
+import { handleCatch } from '@/shared/handleCatch/handleCatch'
 import { createSlice } from '@reduxjs/toolkit'
-import { setAppError, setLoading } from 'app/app.slice'
-import axios from 'axios'
-import { createAppAsyncThunk } from 'shared/createAppAsyncThunk/create-app-async-thunk'
-import { ErrorType } from 'shared/handleCatch/handleCatch'
+import { AxiosError } from 'axios'
 
 const slice = createSlice({
-  name: 'data',
-  initialState: {
-    data: [] as DataType[],
-  },
-  reducers: {
-    clearData: (state) => {
-      state.data = []
-    },
-  },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(fetchFirstData.fulfilled, (state, action) => {
       state.data.push(...action.payload.data)
     })
+  },
+  initialState: {
+    data: [] as DataType[],
+  },
+  name: 'data',
+  reducers: {
+    clearData: state => {
+      state.data = []
+    },
   },
 })
 
@@ -29,21 +29,26 @@ export const fetchFirstData = createAppAsyncThunk<
   FetchDataArgs
 >('data/fetchData', async (arg, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
+
+  dispatch(setLoading({ isLoading: true }))
+
   try {
-    dispatch(setLoading({ isLoading: true }))
-    const responseData: DataType[] = await getKline(arg.symbols, arg.timeFrame, arg.initialTime as number)
+    const responseData: DataType[] = await getKline(
+      arg.symbols,
+      arg.timeFrame,
+      arg.initialTime as number
+    )
+
+    dispatch(setLoading({ isLoading: false }))
+
     if (responseData.length) {
       return { data: responseData }
     } else {
       return rejectWithValue(null)
     }
   } catch (e) {
-    if (axios.isAxiosError<ErrorType>(e)) {
-      const error = e.response?.data.msg ? e.response.data.msg : e.message
-      dispatch(setAppError({ error: error }))
-      return rejectWithValue(null)
-    }
-    dispatch(setAppError({ error: (e as Error).message }))
+    handleCatch(e as AxiosError, dispatch)
+
     return rejectWithValue(null)
   }
 })
@@ -52,7 +57,7 @@ export const dataSlice = slice.reducer
 export const { clearData } = slice.actions
 
 type FetchDataArgs = {
+  initialTime: null | number
   symbols: string
   timeFrame: string
-  initialTime: number | null
 }

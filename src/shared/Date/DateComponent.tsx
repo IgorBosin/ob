@@ -1,36 +1,35 @@
-import * as React from 'react'
-import Stack from '@mui/material/Stack'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeDate } from 'app/options/model/options.slice'
-import { selectDate } from 'app/options/model/options.selector'
+
+import { selectDate } from '@/options/model/options.selector'
+import { changeDate } from '@/options/model/options.slice'
+import { formattedDate } from '@/shared/Date/formattedDate'
+import { Stack } from '@mui/material'
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
 
 export default function DateComponent() {
   const dispatch = useDispatch()
   const date = useSelector(selectDate)
 
-  console.log(date)
-  const handleDateChange = (newDate: Date | null) => {
+  console.log(formattedDate(date))
+  const handleDateChange = (newDate: number) => {
     if (newDate) {
-      const timeInMilliseconds = newDate.getTime()
+      const timeInMilliseconds = newDate.valueOf()
+
       dispatch(changeDate({ date: timeInMilliseconds }))
     }
   }
 
-  const referenceDate = date ? new Date(date) : undefined
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2} sx={{ display: 'inline-block' }}>
         <DateTimePicker
-          format={'dd/MM/yyyy HH:mm:ss'}
-          value={date ? new Date(date) : null}
           ampm={false}
-          slotProps={{ textField: { size: 'small' } }}
+          format={'DD/MM/YYYY HH:mm'}
           onChange={handleDateChange}
-          referenceDate={referenceDate}
+          slotProps={{ textField: { size: 'small' } }}
+          value={dayjs(date)}
         />
       </Stack>
     </LocalizationProvider>

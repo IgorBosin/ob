@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
-import soundFile from 'shared/playSound/soundFiles/sound.mp3'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectPlaySound } from 'app/app.selector'
-import { playSound } from 'app/app.slice'
+
+import { selectPlaySound } from '@/app.selector'
+import { playSound } from '@/app.slice'
+
+import musicalAlert from './soundFiles/musicalAlert.mp3'
 
 const PlaySound = () => {
   const isSound = useSelector(selectPlaySound)
@@ -10,12 +12,13 @@ const PlaySound = () => {
 
   useEffect(() => {
     if (isSound) {
-      const audio = new Audio(soundFile)
-      audio.volume = 0.1
+      const audio = new Audio(musicalAlert)
+
+      audio.volume = 1
       audio.play()
       dispatch(playSound({ playSound: false }))
     }
-  }, [isSound])
+  }, [dispatch, isSound])
 
   return <div></div>
 }

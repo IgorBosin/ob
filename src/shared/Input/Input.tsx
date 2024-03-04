@@ -1,85 +1,95 @@
-import React, { forwardRef } from 'react'
-import { FilledTextFieldProps, InputAdornment, OutlinedTextFieldProps, StandardTextFieldProps, TextField } from '@mui/material'
+import { forwardRef } from 'react'
+
+import {
+  FilledTextFieldProps,
+  InputAdornment,
+  OutlinedTextFieldProps,
+  StandardTextFieldProps,
+  TextField,
+} from '@mui/material'
 
 type Props = {
-  step?: number
   bold?: string
-  suffix?: string
-  min?: number
-  max?: number
+  marginBottom?: string
   // margin?: string,
   marginLeft?: string
   marginRight?: string
-  marginBottom?: string
   marginTop?: string
+  max?: number
+  min?: number
+  step?: number
+  suffix?: string
 }
 
-const Input = forwardRef<HTMLDivElement, (FilledTextFieldProps | OutlinedTextFieldProps | StandardTextFieldProps) & Props>(function Input(props, ref) {
+const Input = forwardRef<
+  HTMLDivElement,
+  (FilledTextFieldProps | OutlinedTextFieldProps | StandardTextFieldProps) & Props
+>(function Input(props, ref) {
   const primaryTextColor = 'black'
   const secondaryTextColor = '#999'
 
   const styles = {
-    // margin: props.margin,
-    marginLeft: props.marginLeft,
-    marginRight: props.marginRight,
-    marginBottom: props.marginBottom,
-    marginTop: props.marginTop,
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: secondaryTextColor, // Цвет рамки в неактивном состоянии
-      },
-      '&:hover fieldset': {
-        borderColor: primaryTextColor, // Цвет рамки при наведении
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: primaryTextColor, // Цвет рамки в фокусе
-      },
-    },
-    '& .MuiFormLabel-root': {
-      color: secondaryTextColor, // цвет placeholder(label)
-      '&.MuiInputLabel-root': {
-        '&.Mui-focused': {
-          color: primaryTextColor,
-        },
-      },
-    },
     '& .MuiFormHelperText-root.Mui-error': {
       '&.MuiFormHelperText-contained': {
         marginLeft: 0, // marginLeft у ошибки
       },
     },
+    '& .MuiFormLabel-root': {
+      '&.MuiInputLabel-root': {
+        '&.Mui-focused': {
+          color: primaryTextColor,
+        },
+      },
+      color: secondaryTextColor, // цвет placeholder(label)
+    },
     '& .MuiInputBase-root': {
-      color: primaryTextColor, // цвет текста
       '& input': {
         '&:-webkit-autofill': {
           transitionDelay: '9999s', // убрать фон при автозаполнении формы
           transitionProperty: 'background-color, color',
         },
       },
+      color: primaryTextColor, // цвет текста
     },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: secondaryTextColor, // Цвет рамки в неактивном состоянии
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: primaryTextColor, // Цвет рамки в фокусе
+      },
+      '&:hover fieldset': {
+        borderColor: primaryTextColor, // Цвет рамки при наведении
+      },
+    },
+    marginBottom: props.marginBottom,
+    // margin: props.margin,
+    marginLeft: props.marginLeft,
+    marginRight: props.marginRight,
+    marginTop: props.marginTop,
   }
 
   return (
     <TextField
-      ref={ref}
-      sx={styles}
-      size={'small'}
-      type={'number'}
-      variant={'outlined'}
-      margin={'dense'}
       InputProps={{
         inputProps: {
-          min: props.min,
           max: props.max,
+          min: props.min,
           step: props.step,
         },
-        style: { fontWeight: props.bold },
         startAdornment: (
-          <InputAdornment style={{ position: 'absolute', left: '55px' }} position="start">
+          <InputAdornment position={'start'} style={{ left: '55px', position: 'absolute' }}>
             {props.suffix}
           </InputAdornment>
         ),
+        style: { fontWeight: props.bold },
       }}
+      margin={'dense'}
+      ref={ref}
+      size={'small'}
+      sx={styles}
+      type={'number'}
+      variant={'outlined'}
       {...props}
     />
   )

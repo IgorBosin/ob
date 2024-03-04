@@ -8,7 +8,7 @@ export async function symbolPrice(pair: string) {
 }
 
 type BaseResponseType = {
-  symbol: string
   price: string
+  symbol: string
   tyme: number
 }

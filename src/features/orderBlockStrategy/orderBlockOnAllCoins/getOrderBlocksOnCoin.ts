@@ -1,13 +1,13 @@
-import { DataType, getKline } from 'shared/api/getKlines'
-import { TradeEntryAndOrderBlockIndexes } from 'features/orderBlockStrategy/closingTrade/ClosingTrade'
-import { showMaxZeroInRow } from 'features/orderBlockStrategy/closingTrade/actions'
-import { PercentToEntryPoint } from 'features/orderBlockStrategy/notEnteringOrderBlocks/notEnteringOrderBlocks'
-import { findOB } from 'features/orderBlockStrategy/OrderBlocks/action/findOB'
-import { filterOBByLiquidityWithdrawal } from 'features/orderBlockStrategy/OrderBlocks/action/filterOBByLiquidityWithdrawal'
-import { enteringTrade } from 'features/orderBlockStrategy/openTrade/action'
-import { getLengthCandle } from 'shared/getLenghtCandle/getLengthCandle'
-import { isRedCandle } from 'shared/getColorCandle/isRedCandle'
-import { isGreenCandle } from 'shared/getColorCandle/isGreenCandle'
+import { filterOBByLiquidityWithdrawal } from '@/features/orderBlockStrategy/OrderBlocks/action/filterOBByLiquidityWithdrawal'
+import { findOB } from '@/features/orderBlockStrategy/OrderBlocks/action/findOB'
+import { TradeEntryAndOrderBlockIndexes } from '@/features/orderBlockStrategy/closingTrade/ClosingTrade'
+import { showMaxZeroInRow } from '@/features/orderBlockStrategy/closingTrade/actions'
+import { PercentToEntryPoint } from '@/features/orderBlockStrategy/notEnteringOrderBlocks/notEnteringOrderBlocks'
+import { enteringTrade } from '@/features/orderBlockStrategy/openTrade/action'
+import { DataType, getKline } from '@/shared/api/getKlines'
+import { isGreenCandle } from '@/shared/getColorCandle/isGreenCandle'
+import { isRedCandle } from '@/shared/getColorCandle/isRedCandle'
+import { getLengthCandle } from '@/shared/getLenghtCandle/getLengthCandle'
 
 export const getOrderBlocksOnCoin = async (
   coin: string,
@@ -18,26 +18,27 @@ export const getOrderBlocksOnCoin = async (
   candlesNumberForInitializeOB: number,
   isShowOnlyBullOB: boolean,
   isShowOnlyBearOB: boolean,
-  riskReward: number,
+  riskReward: number
 ): Promise<SummaryInfo> => {
   const summaryInfo: SummaryInfo = {
-    coin: '',
     allEnteringTrades: 0,
-    win: 0,
-    lose: 0,
-    earnPoints: 0,
-    percentWinningTrades: 0,
-    maxLostTradesInRow: 0,
-    strategyAssessment: 0,
-    fee: 0,
-    total: 0,
-    openTime: 0,
     closeTime: 0,
-    nearestBullOB: 0,
+    coin: '',
+    earnPoints: 0,
+    fee: 0,
+    lose: 0,
+    maxLostTradesInRow: 0,
     nearestBearOB: 0,
+    nearestBullOB: 0,
+    openTime: 0,
+    percentWinningTrades: 0,
+    strategyAssessment: 0,
+    total: 0,
+    win: 0,
   }
   const data: DataType[] = []
   const firstData: DataType[] = await getKline(coin, timeFrame, initialTime)
+
   data.push(...firstData)
 
   // если нужно выгрузить 2 пачки свечей
@@ -62,25 +63,43 @@ export const getOrderBlocksOnCoin = async (
 
   const oB = findOB(data, candlesNumberForInitializeOB)
 
-  const oBByLiquidityWithdrawal = filterOBByLiquidityWithdrawal(data, oB, prevNumberCandleForLiquidityWithdrawal)
-  const orderBlocksIndexes: number[] = oBByLiquidityWithdrawal.map((orderBlock) => data.indexOf(orderBlock))
+  const oBByLiquidityWithdrawal = filterOBByLiquidityWithdrawal(
+    data,
+    oB,
+    prevNumberCandleForLiquidityWithdrawal
+  )
+  const orderBlocksIndexes: number[] = oBByLiquidityWithdrawal.map(orderBlock =>
+    data.indexOf(orderBlock)
+  )
 
-  const enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[] = enteringTrade(data, orderBlocksIndexes, candlesNumberForInitializeOB, factorOB)
+  const enteringCandleIndexes: TradeEntryAndOrderBlockIndexes[] = enteringTrade(
+    data,
+    orderBlocksIndexes,
+    candlesNumberForInitializeOB,
+    factorOB
+  )
 
   const closingLongTrade = () => {
-    let obj = {
-      win: 0,
+    const obj = {
       lose: 0,
       tradesInRow: {
         date: [] as number[],
         point: [] as number[],
       },
+      win: 0,
     }
+
     // проверяем enteringCandleIndexes пробила ли она вниз до лоя orderBlocks.
     for (const enterCandle of enteringCandleIndexes) {
       const lengthCandle = getLengthCandle(data[enterCandle.orderBlock], factorOB) * riskReward
-      const profitForBullishOB = lengthCandle + data[enterCandle.orderBlock].low + getLengthCandle(data[enterCandle.orderBlock], factorOB)
-      const profitForBearishOB = data[enterCandle.orderBlock].high - getLengthCandle(data[enterCandle.orderBlock], factorOB) - lengthCandle
+      const profitForBullishOB =
+        lengthCandle +
+        data[enterCandle.orderBlock].low +
+        getLengthCandle(data[enterCandle.orderBlock], factorOB)
+      const profitForBearishOB =
+        data[enterCandle.orderBlock].high -
+        getLengthCandle(data[enterCandle.orderBlock], factorOB) -
+        lengthCandle
 
       if (isShowOnlyBullOB) {
         // бычий ОБ (свеча красная)
@@ -133,20 +152,28 @@ export const getOrderBlocksOnCoin = async (
   }
   const closeTrades = closingLongTrade()
 
-  function findNotEnteringOrderBlocksIndexes(enteringTrades: TradeEntryAndOrderBlockIndexes[], orderBlocksIndexes: number[]): number[] {
+  function findNotEnteringOrderBlocksIndexes(
+    enteringTrades: TradeEntryAndOrderBlockIndexes[],
+    orderBlocksIndexes: number[]
+  ): number[] {
     const result: number[] = []
 
-    const enteringOrderBlocks = enteringTrades.map((el) => el.orderBlock)
+    const enteringOrderBlocks = enteringTrades.map(el => el.orderBlock)
+
     for (const orderBlockIndex of orderBlocksIndexes) {
       if (enteringOrderBlocks.includes(orderBlockIndex)) {
         continue
       }
       result.push(orderBlockIndex)
     }
+
     return result
   }
 
-  const notEnteringOrderBlocksIndexes = findNotEnteringOrderBlocksIndexes(enteringCandleIndexes, orderBlocksIndexes)
+  const notEnteringOrderBlocksIndexes = findNotEnteringOrderBlocksIndexes(
+    enteringCandleIndexes,
+    orderBlocksIndexes
+  )
 
   const getNearestOB = (notEnteringOrderBlocksIndexes: number[]): PercentToEntryPoint => {
     const bearOB: number[] = []
@@ -156,22 +183,26 @@ export const getOrderBlocksOnCoin = async (
       nearestBearOB: 0,
       nearestBullOB: 0,
     }
-    notEnteringOrderBlocksIndexes.forEach((el) => {
+
+    notEnteringOrderBlocksIndexes.forEach(el => {
       const candle = data[el]
 
       if (isRedCandle(candle)) {
         const nearestBullOB = ((candle.high - currentPrice) / currentPrice) * 100
+
         bullOB.push(nearestBullOB)
-        console.log('bull OB', nearestBullOB)
+        // console.log('bull OB', nearestBullOB)
       }
       if (isGreenCandle(candle)) {
         const nearestBearOB: number = ((candle.low - currentPrice) / currentPrice) * 100
+
         bearOB.push(nearestBearOB)
-        console.log('bear OB', nearestBearOB)
+        // console.log('bear OB', nearestBearOB)
       }
     })
     percentToEntryPoint.nearestBullOB = bullOB.length ? Math.max(...bullOB) : -100
     percentToEntryPoint.nearestBearOB = bearOB.length ? Math.min(...bearOB) : 100
+
     return percentToEntryPoint
   }
 
@@ -185,11 +216,21 @@ export const getOrderBlocksOnCoin = async (
   summaryInfo.lose = closeTrades.lose
   summaryInfo.earnPoints = closeTrades.win * riskReward - closeTrades.lose
   const percentWinningTrades = (closeTrades.win / (closeTrades.win + closeTrades.lose)) * 100
-  summaryInfo.percentWinningTrades = +((closeTrades.win / (closeTrades.win + closeTrades.lose)) * 100).toFixed(2)
+
+  summaryInfo.percentWinningTrades = +(
+    (closeTrades.win / (closeTrades.win + closeTrades.lose)) *
+    100
+  ).toFixed(2)
   summaryInfo.maxLostTradesInRow = maxZeroInRow
-  summaryInfo.strategyAssessment = +((percentWinningTrades * riskReward) / 100 - (1 - percentWinningTrades / 100)).toFixed(2)
+  summaryInfo.strategyAssessment = +(
+    (percentWinningTrades * riskReward) / 100 -
+    (1 - percentWinningTrades / 100)
+  ).toFixed(2)
   summaryInfo.fee = +enteringCandleIndexes.reduce((acc, el) => acc + el.fee, 0).toFixed(2)
-  summaryInfo.total = +((closeTrades.win * riskReward - closeTrades.lose) * 10 - enteringCandleIndexes.reduce((acc, el) => acc + el.fee, 0)).toFixed(2)
+  summaryInfo.total = +(
+    (closeTrades.win * riskReward - closeTrades.lose) * 10 -
+    enteringCandleIndexes.reduce((acc, el) => acc + el.fee, 0)
+  ).toFixed(2)
   summaryInfo.openTime = data[0].openTime
   summaryInfo.closeTime = data[data.length - 1].closeTime
   summaryInfo.nearestBearOB = +nearestOB.nearestBearOB.toFixed(2)
@@ -199,18 +240,18 @@ export const getOrderBlocksOnCoin = async (
 }
 
 export type SummaryInfo = {
-  coin: string
   allEnteringTrades: number
-  win: number
-  lose: number
-  earnPoints: number
-  percentWinningTrades: number
-  maxLostTradesInRow: number
-  strategyAssessment: number
-  fee: number
-  total: number
-  openTime: number
   closeTime: number
-  nearestBullOB: number
+  coin: string
+  earnPoints: number
+  fee: number
+  lose: number
+  maxLostTradesInRow: number
   nearestBearOB: number
+  nearestBullOB: number
+  openTime: number
+  percentWinningTrades: number
+  strategyAssessment: number
+  total: number
+  win: number
 }

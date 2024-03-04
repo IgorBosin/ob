@@ -1,22 +1,27 @@
 import axios from 'axios'
 
-export async function getKline(pair: string, interval: string, startTime: number | null, limit = 1000) {
+export async function getKline(
+  pair: string,
+  interval: string,
+  startTime: null | number,
+  limit = 1000
+) {
   const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${pair}USDT&interval=${interval}&limit=${limit}&startTime=${startTime}`
   const data = await axios.get<BaseResponseType[]>(url)
 
-  const transformedData: DataType[] = data.data.map((series) => ({
-    openTime: series[0],
-    open: parseFloat(series[1]),
-    high: parseFloat(series[2]),
-    low: parseFloat(series[3]),
+  const transformedData: DataType[] = data.data.map(series => ({
     close: parseFloat(series[4]),
-    volume: parseFloat(series[5]),
     closeTime: series[6],
+    high: parseFloat(series[2]),
+    ignored: parseFloat(series[11]),
+    low: parseFloat(series[3]),
+    open: parseFloat(series[1]),
+    openTime: series[0],
     quoteAssetVolume: parseFloat(series[7]),
-    trades: series[8],
     takerBaseAssetVolume: parseFloat(series[9]),
     takerQuoteAssetVolume: parseFloat(series[10]),
-    ignored: parseFloat(series[11]),
+    trades: series[8],
+    volume: parseFloat(series[5]),
   }))
 
   return transformedData
@@ -38,16 +43,16 @@ type BaseResponseType = [
 ]
 
 export type DataType = {
-  openTime: number
-  open: number
-  high: number
-  low: number
   close: number
-  volume: number
   closeTime: number
+  high: number
+  ignored: number
+  low: number
+  open: number
+  openTime: number
   quoteAssetVolume: number
-  trades: number
   takerBaseAssetVolume: number
   takerQuoteAssetVolume: number
-  ignored: number
+  trades: number
+  volume: number
 }

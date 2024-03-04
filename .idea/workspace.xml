@@ -4,24 +4,84 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bf8aa0d-3cc2-459f-a4ba-8ae99ad0ee83" name="Changes" comment="refactoring, prettier. add handleCatch.ts">
-      <change afterPath="$PROJECT_DIR$/src/features/showLengthCandles/ShowLengthCandles.tsx" afterDir="false" />
+    <list default="true" id="ede78921-c45e-4cf8-a13c-2989e730b2be" name="Changes" comment="four">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/test-order-block.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.selector.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.slice.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/options/Options.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/options/model/options.selector.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/options/model/options.slice.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/store.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/findLiquidityStrategy/FindLiquidityStrategy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/findLiquidityStrategy/FindLiquidityStrategy.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/findLiquidity/findBuyside.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/findLiquidity/findBuyside.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/findLiquidity/findSellside.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/findLiquidity/findSellside.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/findSellsideAndBuyside.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/findSellsideAndBuyside.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/showDistanceToLiquidity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/findLiquidityStrategy/actions/showDistanceToLiquidity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/action/filterOBByLiquidityWithdrawal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/action/filterOBByLiquidityWithdrawal.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/action/findOB.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/action/findOB.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/ui/findOB/filterOBByLiquidityWithdrawal/filterOBByLiquidityWithdrawal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/ui/findOB/filterOBByLiquidityWithdrawal/filterOBByLiquidityWithdrawal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/ui/findOB/filterOBByLiquidityWithdrawal/resultOrderBlocksAfterAllFilter/resultOrderBlocksAfterAllFilter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/ui/findOB/filterOBByLiquidityWithdrawal/resultOrderBlocksAfterAllFilter/resultOrderBlocksAfterAllFilter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/ui/findOB/findOB.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/OrderBlocks/ui/findOB/findOB.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/closingTrade/ClosingTrade.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/closingTrade/ClosingTrade.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/closingTrade/actions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/closingTrade/actions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/data/Data.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/data/Data.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/data/data.selector.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/data/data.selector.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/data/data.slice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/data/data.slice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/notEnteringOrderBlocks/notEnteringOrderBlocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/notEnteringOrderBlocks/notEnteringOrderBlocks.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/openTrade/OpenTrade.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/openTrade/OpenTrade.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/openTrade/action.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/openTrade/action.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/orderBlockOnAllCoins/OrderBlockOnAllCoins.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/orderBlockOnAllCoins/OrderBlockOnAllCoins.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/orderBlockStrategy/orderBlockOnAllCoins/getOrderBlocksOnCoin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/orderBlockStrategy/orderBlockOnAllCoins/getOrderBlocksOnCoin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/react-app-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reportWebVitals.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/setupTests.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/Date/DateComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/Date/DateComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/Date/formattedDate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/Date/formattedDate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/Date/generalDates.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/Date/generalDates.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/Dropdown/Dropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/Dropdown/Dropdown.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/shared/DynamicTable/DynamicTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/DynamicTable/DynamicTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/ErrorSnackbar/ErrorSnackbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/ErrorSnackbar/ErrorSnackbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/Input/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/Input/Input.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/ShowCandles/ShowCandles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/ShowCandles/ShowCandles.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/TimeFrame/TimeFrameType.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/TimeFrame/TimeFrameType.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/api/getKlines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/api/getKlines.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/api/symbolPrice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/api/symbolPrice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/coins/coins.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/coins/coins.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/createAppAsyncThunk/create-app-async-thunk.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/createAppAsyncThunk/create-app-async-thunk.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/exportToExcel/exportToExcel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/exportToExcel/exportToExcel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/getColorCandle/isGreenCandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/getColorCandle/isGreenCandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/getColorCandle/isRedCandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/getColorCandle/isRedCandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/getLenghtCandle/getLengthBodyCandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/getLenghtCandle/getLengthBodyCandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/getLenghtCandle/getLengthCandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/getLenghtCandle/getLengthCandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/getLenghtCandle/getLengthWickCandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/getLenghtCandle/getLengthWickCandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/handleCatch/handleCatch.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/handleCatch/handleCatch.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/playSound/playSound.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/playSound/playSound.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/playSound/soundFiles/sound.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="TypeScript File" />
-        <option value="TypeScript JSX File" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,10 +90,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
+  &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="2d84qZ8lMto4T0d80SkZK1L97jf" />
+  <component name="ProjectId" id="2dB0XBo3vioIGllZhk5lE93BXVs" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -44,30 +103,58 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/find-order-blocks/watchers.xml&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;D:\\trading\\new\\node_modules\\stylelint&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\test-order-block\\node_modules\\prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\test-order-block\\node_modules\\typescript\\lib&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\trading\\test-order-block\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.linters.eslint&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\trading\\test-order-block\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\test-order-block\src\shared\handleCatch" />
-      <recent name="D:\test-order-block\src\shared\coins" />
-      <recent name="D:\test-order-block\src\shared\createAppAsyncThunk" />
-    </key>
-  </component>
-  <component name="RunManager">
-    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="start" />
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="format" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="format" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="lint" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -75,28 +162,38 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.start" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.format" />
+        <item itemvalue="npm.lint" />
+        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9bf8aa0d-3cc2-459f-a4ba-8ae99ad0ee83" name="Changes" comment="" />
-      <created>1709376563806</created>
+      <changelist id="ede78921-c45e-4cf8-a13c-2989e730b2be" name="Changes" comment="" />
+      <created>1709466201820</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1709376563806</updated>
-      <workItem from="1709376566351" duration="293000" />
-      <workItem from="1709376874569" duration="5620000" />
+      <updated>1709466201820</updated>
+      <workItem from="1709466202953" duration="483000" />
+      <workItem from="1709466727467" duration="33000" />
+      <workItem from="1709466772232" duration="4306000" />
+      <workItem from="1709539506851" duration="7638000" />
+      <workItem from="1709568457485" duration="1045000" />
+      <workItem from="1709570028172" duration="326000" />
     </task>
-    <task id="LOCAL-00001" summary="refactoring, prettier. add handleCatch.ts">
+    <task id="LOCAL-00001" summary="four">
       <option name="closed" value="true" />
-      <created>1709382348843</created>
+      <created>1709466486707</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1709382348843</updated>
+      <updated>1709466486707</updated>
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
@@ -104,8 +201,31 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactoring, prettier. add handleCatch.ts" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring, prettier. add handleCatch.ts" />
+    <MESSAGE value="four" />
+    <option name="LAST_COMMIT_MESSAGE" value="four" />
   </component>
 </project>

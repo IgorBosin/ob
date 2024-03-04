@@ -1,7 +1,12 @@
-import React, { useState } from 'react'
-import { coins } from 'shared/coins/coins'
-import { getOrderBlocksOnCoin, SummaryInfo } from 'features/orderBlockStrategy/orderBlockOnAllCoins/getOrderBlocksOnCoin'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { selectIsLoading } from '@/app.selector'
+import { setLoading } from '@/app.slice'
+import {
+  SummaryInfo,
+  getOrderBlocksOnCoin,
+} from '@/features/orderBlockStrategy/orderBlockOnAllCoins/getOrderBlocksOnCoin'
 import {
   selectCandlesNumberForInitializeOB,
   selectDate,
@@ -11,18 +16,19 @@ import {
   selectPrevNumberCandleForLiquidityWithdrawal,
   selectRiskReward,
   selectTimeFrame,
-} from 'app/options/model/options.selector'
-import DynamicTable, { Column } from 'shared/DynamicTable/DynamicTable'
-import { exportToExcel } from 'shared/exportToExcel/exportToExcel'
-import { selectIsLoading } from 'app/app.selector'
-import { handleCatch } from 'shared/handleCatch/handleCatch'
-import { setLoading } from 'app/app.slice'
+} from '@/options/model/options.selector'
+import DynamicTable, { Column } from '@/shared/DynamicTable/DynamicTable'
+import { coins } from '@/shared/coins/coins'
+import { exportToExcel } from '@/shared/exportToExcel/exportToExcel'
+import { handleCatch } from '@/shared/handleCatch/handleCatch'
 import { AxiosError } from 'axios'
 
 const OrderBlockOnAllCoins = () => {
   const date = useSelector(selectDate)
   const [tableData, setTableData] = useState<SummaryInfo[]>([])
-  const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
+  const prevNumberCandleForLiquidityWithdrawal = useSelector(
+    selectPrevNumberCandleForLiquidityWithdrawal
+  )
   const factorOB = useSelector(selectFactorOB)
   const timeFrame = useSelector(selectTimeFrame)
   const isLoading = useSelector(selectIsLoading)
@@ -33,7 +39,7 @@ const OrderBlockOnAllCoins = () => {
   const dispatch = useDispatch()
 
   const iterParallel = async () => {
-    const coinPromises = coins.map((coin) =>
+    const coinPromises = coins.map(coin =>
       getOrderBlocksOnCoin(
         coin,
         timeFrame,
@@ -43,13 +49,15 @@ const OrderBlockOnAllCoins = () => {
         candlesNumberForInitializeOB,
         isShowOnlyBullOB,
         isShowOnlyBearOB,
-        riskReward,
-      ),
+        riskReward
+      )
     )
+
     return await Promise.all(coinPromises)
   }
   const iterSequential = async () => {
     const data = []
+
     for (const coin of coins) {
       const info = await getOrderBlocksOnCoin(
         coin,
@@ -60,10 +68,12 @@ const OrderBlockOnAllCoins = () => {
         candlesNumberForInitializeOB,
         isShowOnlyBullOB,
         isShowOnlyBearOB,
-        riskReward,
+        riskReward
       )
+
       data.push(info)
     }
+
     return data
   }
 
@@ -71,6 +81,7 @@ const OrderBlockOnAllCoins = () => {
     dispatch(setLoading({ isLoading: true }))
     try {
       const data = await iterParallel() // паралельный запрос. можно заменить на последовательный
+
       setTableData(data)
       dispatch(setLoading({ isLoading: false }))
     } catch (e) {
@@ -91,8 +102,8 @@ const OrderBlockOnAllCoins = () => {
     { label: 'Итого', prop: 'total' },
     { label: 'Ближайш бычий ОБ', prop: 'nearestBullOB' },
     { label: 'Ближайш медвеж ОБ', prop: 'nearestBearOB' },
-    { label: 'Начало графика', prop: 'openTime', date: true },
-    { label: 'Конец графика', prop: 'closeTime', date: true },
+    { date: true, label: 'Начало графика', prop: 'openTime' },
+    { date: true, label: 'Конец графика', prop: 'closeTime' },
   ]
 
   const calculateTotalEnteringTrades = () => {
@@ -100,7 +111,7 @@ const OrderBlockOnAllCoins = () => {
   }
 
   return (
-    <div style={{ margin: 'auto', maxWidth: '1500px', marginBottom: '10px' }}>
+    <div style={{ margin: 'auto', marginBottom: '10px', maxWidth: '1500px' }}>
       <p>Total Earn points: {calculateTotalEnteringTrades()}</p>
       <button disabled={isLoading} onClick={iterCoin}>
         Show Info
@@ -108,7 +119,7 @@ const OrderBlockOnAllCoins = () => {
       <button disabled={!tableData.length} onClick={() => exportToExcel(tableData)}>
         Export to Excel
       </button>
-      <DynamicTable data={tableData} columns={columns} setData={setTableData} />
+      <DynamicTable columns={columns} data={tableData} setData={setTableData} />
     </div>
   )
 }

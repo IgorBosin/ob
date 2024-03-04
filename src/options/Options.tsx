@@ -1,18 +1,6 @@
-import React, { ChangeEvent } from 'react'
-import Input from 'shared/Input/Input'
-import Dropdown from 'shared/Dropdown/Dropdown'
+import { ChangeEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  changeBodyOrWickOutsideOB,
-  changeCurrentCandleMustBeOutsideOB,
-  changeFactorOB,
-  changePrevNumberCandleForLiquidityWithdrawal,
-  changeRiskReward,
-  changeSymbol,
-  setCandlesNumberForInitializeOB,
-  showOnlyBearOB,
-  showOnlyBullOB,
-} from 'app/options/model/options.slice'
+
 import {
   selectBodyOrWickOutsideOB,
   selectCandlesNumberForInitializeOB,
@@ -23,10 +11,23 @@ import {
   selectPrevNumberCandleForLiquidityWithdrawal,
   selectRiskReward,
   selectSymbol,
-} from 'app/options/model/options.selector'
+} from '@/options/model/options.selector'
+import {
+  changeBodyOrWickOutsideOB,
+  changeCurrentCandleMustBeOutsideOB,
+  changeFactorOB,
+  changePrevNumberCandleForLiquidityWithdrawal,
+  changeRiskReward,
+  changeSymbol,
+  setCandlesNumberForInitializeOB,
+  showOnlyBearOB,
+  showOnlyBullOB,
+} from '@/options/model/options.slice'
+import DateComponent from '@/shared/Date/DateComponent'
+import Dropdown from '@/shared/Dropdown/Dropdown'
+import Input from '@/shared/Input/Input'
+import TimeFrame from '@/shared/TimeFrame/TimeFrameType'
 import { Checkbox, FormControlLabel } from '@mui/material'
-import TimeFrame from 'shared/TimeFrame/TimeFrameType'
-import DateComponent from 'shared/Date/DateComponent'
 
 const Options = () => {
   const dispatch = useDispatch()
@@ -35,7 +36,9 @@ const Options = () => {
   const isShowOnlyBullOB = useSelector(selectIsShowOnlyBullOB)
   const currentCandleMustBeOutsideOB = useSelector(selectCurrentCandleMustBeOutsideOB)
   const candlesNumberForInitializeOB = useSelector(selectCandlesNumberForInitializeOB)
-  const prevNumberCandleForLiquidityWithdrawal = useSelector(selectPrevNumberCandleForLiquidityWithdrawal)
+  const prevNumberCandleForLiquidityWithdrawal = useSelector(
+    selectPrevNumberCandleForLiquidityWithdrawal
+  )
   const optionsBodyOrWickOutsideOB = ['wick', 'body']
   const bodyOrWickOutsideOB = useSelector(selectBodyOrWickOutsideOB)
   const symbol = useSelector(selectSymbol)
@@ -45,26 +48,30 @@ const Options = () => {
     dispatch(
       setCandlesNumberForInitializeOB({
         candlesNumberForInitializeOB: +e.currentTarget.value,
-      }),
+      })
     )
   }
   const onChangeFactorOB = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     dispatch(changeFactorOB({ factor: +e.currentTarget.value }))
   }
 
-  const onChangeCurrentCandleMustBeOutsideOB = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChangeCurrentCandleMustBeOutsideOB = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     dispatch(
       changeCurrentCandleMustBeOutsideOB({
         currentCandleMustBeOutsideOB: +e.currentTarget.value,
-      }),
+      })
     )
   }
 
-  const onChangePrevNumberCandleForLiquidityWithdrawal = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChangePrevNumberCandleForLiquidityWithdrawal = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     dispatch(
       changePrevNumberCandleForLiquidityWithdrawal({
         prevNumberCandleForLiquidityWithdrawal: +e.currentTarget.value,
-      }),
+      })
     )
   }
 
@@ -76,7 +83,7 @@ const Options = () => {
     dispatch(showOnlyBullOB({ isShowOnlyBullOB: e.currentTarget.checked }))
   }
 
-  const handleDispatchAction = (value: 'wick' | 'body') => {
+  const handleDispatchAction = (value: 'body' | 'wick') => {
     dispatch(changeBodyOrWickOutsideOB({ bodyOrWickOutsideOB: value }))
     debugger
   }
@@ -95,29 +102,56 @@ const Options = () => {
       <div style={{ display: 'flex' }}>
         <DateComponent />
         <TimeFrame />
-        <Input margin={'none'} type={'text'} label={'монета'} onChange={onChangeSymbol} placeholder={symbol} />
+        <Input
+          label={'монета'}
+          margin={'none'}
+          onChange={onChangeSymbol}
+          placeholder={symbol}
+          type={'text'}
+        />
       </div>
 
       <div style={{ display: 'flex' }}>
-        <Input label={'RR'} placeholder={riskReward.toString()} onChange={onChangeRiskReward} />
+        <Input label={'RR'} onChange={onChangeRiskReward} placeholder={riskReward.toString()} />
 
         <Input
-          placeholder={prevNumberCandleForLiquidityWithdrawal.toString()}
           label={'Кол-во свечей для снятия ликвидности'}
           onChange={onChangePrevNumberCandleForLiquidityWithdrawal}
+          placeholder={prevNumberCandleForLiquidityWithdrawal.toString()}
         />
-        <Input placeholder={factorOB.toString()} label={'Расширение ОБ'} step={0.1} onChange={onChangeFactorOB} />
-        <Input placeholder={candlesNumberForInitializeOB.toString()} label={'Пар-р индикатора'} onChange={onChangeParamIndicator} />
-        <Input placeholder={currentCandleMustBeOutsideOB.toString()} label={'n-свеча выходит за ОБ'} onChange={onChangeCurrentCandleMustBeOutsideOB} />
+        <Input
+          label={'Расширение ОБ'}
+          onChange={onChangeFactorOB}
+          placeholder={factorOB.toString()}
+          step={0.1}
+        />
+        <Input
+          label={'Пар-р индикатора'}
+          onChange={onChangeParamIndicator}
+          placeholder={candlesNumberForInitializeOB.toString()}
+        />
+        <Input
+          label={'n-свеча выходит за ОБ'}
+          onChange={onChangeCurrentCandleMustBeOutsideOB}
+          placeholder={currentCandleMustBeOutsideOB.toString()}
+        />
       </div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <FormControlLabel control={<Checkbox checked={isShowOnlyBullOB} onChange={onCheckIsShowOnlyBullOB} />} label="Red OB" labelPlacement="bottom" />
-        <FormControlLabel control={<Checkbox checked={isShowOnlyBearOB} onChange={onCheckIsShowOnlyBearOB} />} label="Green OB" labelPlacement="bottom" />
+      <div style={{ alignItems: 'center', display: 'flex' }}>
+        <FormControlLabel
+          control={<Checkbox checked={isShowOnlyBullOB} onChange={onCheckIsShowOnlyBullOB} />}
+          label={'Red OB'}
+          labelPlacement={'bottom'}
+        />
+        <FormControlLabel
+          control={<Checkbox checked={isShowOnlyBearOB} onChange={onCheckIsShowOnlyBearOB} />}
+          label={'Green OB'}
+          labelPlacement={'bottom'}
+        />
         <Dropdown
-          title={'Выход n-свечи за ОБ'}
+          dispatchAction={handleDispatchAction}
           options={optionsBodyOrWickOutsideOB}
           selectedOption={bodyOrWickOutsideOB}
-          dispatchAction={handleDispatchAction}
+          title={'Выход n-свечи за ОБ'}
         />
       </div>
     </div>

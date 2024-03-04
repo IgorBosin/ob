@@ -1,10 +1,11 @@
-import { DataType } from 'shared/api/getKlines'
+import { DataType } from '@/shared/api/getKlines'
 
 export const findSellside = (data: DataType[]) => {
   const sellside: DataType[] = []
 
   for (let i = 0; i < data.length - 1; i++) {
     let isTry = true
+
     for (let j = i + 1; j < data.length; j++) {
       if (data[i].low > data[j].low) {
         isTry = false
@@ -14,6 +15,7 @@ export const findSellside = (data: DataType[]) => {
       sellside.push(data[i])
     }
   }
-  console.log(sellside)
+
+  // console.log(sellside)
   return sellside
 }

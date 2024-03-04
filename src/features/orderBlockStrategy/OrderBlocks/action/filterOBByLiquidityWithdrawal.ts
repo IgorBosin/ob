@@ -1,24 +1,44 @@
-import { DataType } from 'shared/api/getKlines'
-import { isRedCandle } from 'shared/getColorCandle/isRedCandle'
+import { DataType } from '@/shared/api/getKlines'
+import { isRedCandle } from '@/shared/getColorCandle/isRedCandle'
 
-export const filterOBByLiquidityWithdrawal = (data: DataType[], orderBlockList: DataType[], prevNumberCandleForLiquidityWithdrawal: number): DataType[] => {
-  if (!prevNumberCandleForLiquidityWithdrawal) return orderBlockList
+export const filterOBByLiquidityWithdrawal = (
+  data: DataType[],
+  orderBlockList: DataType[],
+  prevNumberCandleForLiquidityWithdrawal: number
+): DataType[] => {
+  if (!prevNumberCandleForLiquidityWithdrawal) {
+    return orderBlockList
+  }
 
   const redCandle: DataType[] = []
   const greenCandle: DataType[] = []
 
-  orderBlockList.forEach((el) => {
+  orderBlockList.forEach(el => {
     isRedCandle(el) ? redCandle.push(el) : greenCandle.push(el)
   })
 
-  const filteredBull = filterBullOBByLiquidityWithdrawal(data, redCandle, prevNumberCandleForLiquidityWithdrawal)
-  const filteredBear = filterBearOBByLiquidityWithdrawal(data, greenCandle, prevNumberCandleForLiquidityWithdrawal)
+  const filteredBull = filterBullOBByLiquidityWithdrawal(
+    data,
+    redCandle,
+    prevNumberCandleForLiquidityWithdrawal
+  )
+  const filteredBear = filterBearOBByLiquidityWithdrawal(
+    data,
+    greenCandle,
+    prevNumberCandleForLiquidityWithdrawal
+  )
 
   return [...filteredBull, ...filteredBear].sort((a, b) => a.openTime - b.openTime)
 }
 
-export const filterBearOBByLiquidityWithdrawal = (data: DataType[], orderBlockList: DataType[], prevNumberCandleForLiquidityWithdrawal: number) => {
-  if (!prevNumberCandleForLiquidityWithdrawal) return orderBlockList
+export const filterBearOBByLiquidityWithdrawal = (
+  data: DataType[],
+  orderBlockList: DataType[],
+  prevNumberCandleForLiquidityWithdrawal: number
+) => {
+  if (!prevNumberCandleForLiquidityWithdrawal) {
+    return orderBlockList
+  }
   const sortOB = []
 
   for (const orderBlock of orderBlockList) {
@@ -44,9 +64,16 @@ export const filterBearOBByLiquidityWithdrawal = (data: DataType[], orderBlockLi
   return sortOB
 }
 
-export const filterBullOBByLiquidityWithdrawal = (data: DataType[], orderBlockList: DataType[], prevNumberCandleForLiquidityWithdrawal: number) => {
-  if (!prevNumberCandleForLiquidityWithdrawal) return orderBlockList
+export const filterBullOBByLiquidityWithdrawal = (
+  data: DataType[],
+  orderBlockList: DataType[],
+  prevNumberCandleForLiquidityWithdrawal: number
+) => {
+  if (!prevNumberCandleForLiquidityWithdrawal) {
+    return orderBlockList
+  }
   const sortOB = []
+
   for (const orderBlock of orderBlockList) {
     const obIndex = data.indexOf(orderBlock)
     let isValid = true
@@ -66,5 +93,6 @@ export const filterBullOBByLiquidityWithdrawal = (data: DataType[], orderBlockLi
       sortOB.push(orderBlock)
     }
   }
+
   return sortOB
 }

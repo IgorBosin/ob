@@ -1,37 +1,38 @@
-import React, { useEffect } from 'react'
+import { ChangeEvent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearData, fetchFirstData } from 'features/orderBlockStrategy/data/data.slice'
-import { Button } from '@mui/material'
-import { formattedDate } from 'shared/Date/formattedDate'
-import Input from 'shared/Input/Input'
-import { selectData } from 'features/orderBlockStrategy/data/data.selector'
-import { selectDate, selectTimeFrame } from 'app/options/model/options.selector'
 
-type Props = {
-  symbols: string
-  setSymbols: (symbols: string) => void
-}
-const Data = ({ symbols, setSymbols }: Props) => {
+import { selectData } from '@/features/orderBlockStrategy/data/data.selector'
+import { clearData, fetchFirstData } from '@/features/orderBlockStrategy/data/data.slice'
+import { selectDate, selectSymbol, selectTimeFrame } from '@/options/model/options.selector'
+import { changeSymbol } from '@/options/model/options.slice'
+import { formattedDate } from '@/shared/Date/formattedDate'
+import Input from '@/shared/Input/Input'
+import { AppDispatch } from '@/store'
+import { Button } from '@mui/material'
+
+const Data = () => {
+  const symbol = useSelector(selectSymbol)
   const date = useSelector(selectDate)
   const timeFrame = useSelector(selectTimeFrame)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const data = useSelector(selectData)
 
   useEffect(() => {
     if (data.length) {
       dispatch(
         fetchFirstData({
-          symbols,
-          timeFrame,
           initialTime: data[data.length - 1].closeTime,
-        }),
+          symbols: symbol,
+          timeFrame,
+        })
       )
     }
   }, [data])
 
   const showTime = data.length ? (
     <li>
-      ({data.length}) {formattedDate(data[0].openTime)} - {formattedDate(data[data.length - 1].closeTime)}
+      ({data.length}) {formattedDate(data[0].openTime)} -{' '}
+      {formattedDate(data[data.length - 1].closeTime)}
     </li>
   ) : (
     ''
@@ -39,22 +40,23 @@ const Data = ({ symbols, setSymbols }: Props) => {
 
   const onClickFetchData = () => {
     dispatch(clearData())
-    dispatch(fetchFirstData({ symbols, timeFrame, initialTime: date }))
+    dispatch(fetchFirstData({ initialTime: date, symbols: symbol, timeFrame }))
   }
 
-  // console.log('компонент Data перерисован')
+  const onClickChangeSymbol = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    dispatch(changeSymbol({ symbol: e.currentTarget.value }))
+  }
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ alignItems: 'center', display: 'flex', margin: ' 5px 0' }}>
       <Input
-        margin={'none'}
-        type={'text'}
         label={'монета'}
-        onChange={(e) => {
-          setSymbols(e.currentTarget.value.toUpperCase())
-        }}
-        placeholder={symbols}
+        margin={'none'}
+        onChange={onClickChangeSymbol}
+        placeholder={symbol}
+        type={'text'}
       />
-      <Button onClick={onClickFetchData} color="success" variant="outlined">
+      <Button color={'success'} onClick={onClickFetchData} variant={'outlined'}>
         Загрузить график
       </Button>
       {showTime}
